@@ -43,7 +43,14 @@
 			$rendered = strval( $message );
 			$encoded = base64_encode( $rendered );
 			$date = date( 'D, j F Y H:i:s O' );
-			$hmac = $this->calculate_RFC2104HMAC( $date, $this->SecretKey );
+			if( function_exists( 'hash_hmac' ) and in_array( 'sha1', hash_algos() ) ) {
+				if( $this->debug ) { echo "USING HASH_HMAC\n"; }
+				$hmac = base64_encode( hash_hmac( 'sha1', $date, $this->SecretKey, true ) );
+			}
+			else {
+				if( $this->debug ) { echo "USING RFC2104HMAC\n"; }
+				$hmac = $this->calculate_RFC2104HMAC( $date, $this->SecretKey );
+			}
 
 			$date_header = "Date: " . $date;
 			$auth_header = "X-Amzn-Authorization: AWS3-HTTPS AWSAccessKeyId=" . $this->AccessKey . ", Algorithm=HmacSHA1, Signature=" . $hmac;
@@ -85,6 +92,8 @@
 				print $info['request_header'];
 				print "--[ HTTP RESPONSE CODE ]--------------------------------\n";
 				print $info['http_code'] . "\n";
+				print "--[ RESPONSE CONTENT ]----------------------------------\n";
+				print $response;
 				print "--[ DONE ]----------------------------------------------\n";
 			}
 
