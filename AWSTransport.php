@@ -23,12 +23,21 @@
 		* @param string $endpoint The AWS endpoint to use.
 		*/
 		public function __construct($AWSAccessKeyId , $AWSSecretKey, $debug = false, $endpoint = 'https://email.us-east-1.amazonaws.com/') {
-			$this->AccessKey = $AWSAccessKeyId;
-			$this->SecretKey = $AWSSecretKey;
+			$this->AWSAccessKeyId = $AWSAccessKeyId;
+			$this->AWSSecretKey = $AWSSecretKey;
 			$this->endpoint = $endpoint;
 			$this->debug = $debug;
 		}
-
+		
+		/**
+		* Create a new AWSTransport.
+		* @param string $AWSAccessKeyId Your access key.
+		* @param string $AWSSecretKey Your secret key.
+		*/
+		public static function newInstance( $AWSAccessKeyId , $AWSSecretKey ) {
+			return new Swift_AWSTransport( $AWSAccessKeyId , $AWSSecretKey );
+		}
+		
 		/**
 		* Send the given Message.
 		*
@@ -41,72 +50,33 @@
 		*/
 		public function send( Swift_Mime_Message $message, &$failedRecipients = null ) {
 			$rendered = strval( $message );
-			$encoded = base64_encode( $rendered );
+			$encoded = urlencode( base64_encode( $rendered ) );
+
 			$date = date( 'D, j F Y H:i:s O' );
+			
 			if( function_exists( 'hash_hmac' ) and in_array( 'sha1', hash_algos() ) ) {
-				if( $this->debug ) { echo "USING HASH_HMAC\n"; }
-				$hmac = base64_encode( hash_hmac( 'sha1', $date, $this->SecretKey, true ) );
+				$hmac = base64_encode( hash_hmac( 'sha1', $date, $this->AWSSecretKey, true ) );
 			}
 			else {
-				if( $this->debug ) { echo "USING RFC2104HMAC\n"; }
-				$hmac = $this->calculate_RFC2104HMAC( $date, $this->SecretKey );
+				$hmac = $this->calculate_RFC2104HMAC( $date, $this->AWSSecretKey );
 			}
 
 			$date_header = "Date: " . $date;
-			$auth_header = "X-Amzn-Authorization: AWS3-HTTPS AWSAccessKeyId=" . $this->AccessKey . ", Algorithm=HmacSHA1, Signature=" . $hmac;
+			$auth_header = "X-Amzn-Authorization: AWS3-HTTPS AWSAccessKeyId=" . $this->AWSAccessKeyId . ", Algorithm=HmacSHA1, Signature=" . $hmac;
 
-			// Please forgive me...
-			if( $this->debug ) {
-				print "--[ RAW ]-----------------------------------------------\n";
-				print $rendered;
-				print "--[ ENCODED ]-------------------------------------------\n";
-				print $encoded;
-				print "\n";
-				print "--[ DATE ]----------------------------------------------\n";
-				print $date . "\n";
-				print "--[ SECRET KEY ]----------------------------------------\n";
-				print $this->SecretKey . "\n";
-				print "--[ HMAC ]----------------------------------------------\n";
-				print $hmac . "\n";
-				print "--[ HEADER ]--------------------------------------------\n";
-				print $date_header . "\n";
-				print $auth_header . "\n";
-				print "--[ CURL ]----------------------------------------------\n";
-			}
-
-			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_URL, $this->endpoint);
-			curl_setopt($ch, CURLOPT_POST, 1);
-			curl_setopt($ch, CURLOPT_POSTFIELDS, "Action=SendRawEmail&RawMessage.Data=" . urlencode ( $encoded ) );
-			curl_setopt($ch, CURLOPT_HTTPHEADER, array( $date_header, $auth_header ) );
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			if( $this->debug ) {
-				curl_setopt($ch, CURLINFO_HEADER_OUT, 1 );
-			}
-			$response = curl_exec($ch);
-			$info = curl_getinfo($ch);
-			curl_close($ch);
-
-			if( $this->debug ) {
-				print "--[ REQUEST HEADERS ]-----------------------------------\n";
-				print $info['request_header'];
-				print "--[ HTTP RESPONSE CODE ]--------------------------------\n";
-				print $info['http_code'] . "\n";
-				print "--[ RESPONSE CONTENT ]----------------------------------\n";
-				print $response;
-				print "--[ DONE ]----------------------------------------------\n";
-			}
+			$this->doFsock( $date_header, $auth_header, $encoded );
 
 			/**
 			* @TODO I'm sure we need code for partial failures, but I can't test
 			* multiple addresses until I get production access.
 			*/
-			if( 200 == $info['http_code'] ) {
+			/*if( 200 == $info['http_code'] ) {
 				return count((array) $message->getTo());
 			}
 			else {
 				return 0;
-			}
+			}*/
+			return 1;
 		}
 
 		/**
@@ -129,4 +99,56 @@
 		public function stop() {}
 		public function registerPlugin(Swift_Events_EventListener $plugin) {}
 
+		protected function doCurl ( $date_header, $auth_header, $encoded ) {
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, $this->endpoint);
+			curl_setopt($ch, CURLOPT_POST, 1);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, "Action=SendRawEmail&RawMessage.Data=" . urlencode ( $encoded ) );
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array( $date_header, $auth_header ) );
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			$response = curl_exec($ch);
+			$info = curl_getinfo($ch);
+			curl_close($ch);
+		}
+
+		protected function doFsock ( $date_header, $auth_header, $encoded ) {
+
+			//$message->toByteStream(new AWSInputByteStream($socket))
+
+			$host = parse_url( $this->endpoint, PHP_URL_HOST );
+			$path = parse_url( $this->endpoint, PHP_URL_PATH );
+
+			$fp = fsockopen( 'ssl://' . $host , 443, $errno, $errstr, 30 );
+			if( ! $fp ) {
+		    		echo "$errstr ($errno)\n";
+			}
+			else {
+				echo "=======================================================\n";
+				_fwrite( $fp, "POST $path HTTP/1.1\r\n" );
+				_fwrite( $fp, "Host: $host\r\n" );
+				_fwrite( $fp, "Content-Type: application/x-www-form-urlencoded\r\n" );
+				_fwrite( $fp, "Content-length: " . strlen( $encoded ) . "\r\n" );
+				_fwrite( $fp, "$date_header\r\n" );
+				_fwrite( $fp, "$auth_header\r\n" );
+				_fwrite( $fp, "Connection: close\r\n\r\n" );
+				flush( $fp );
+
+				_fwrite( $fp, "Action=SendRawEmail" );
+				_fwrite( $fp, "&RawMessage.Data=" . $encoded . "\r\n" );
+				flush( $fp );
+				echo "=======================================================\n";
+				while( ! feof( $fp ) ) {
+					echo fgets( $fp, 128 );
+				}
+				fclose( $fp );
+				echo "=======================================================\n";
+			}
+		}
+		
+	} // AWSTransport
+
+
+	function _fwrite ( $fp, $msg ) {
+		fwrite( $fp, $msg );
+		echo $msg;
 	}
