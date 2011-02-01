@@ -1,6 +1,7 @@
 <?php
 	require_once 'lib/swift_required.php';
 	require_once 'AWSTransport.php';
+	require_once 'AWSInputByteStream.php';
 
 	define( 'AWSAccessKeyId', 'YOUR_ACCESS_KEY' );
 	define( 'AWSSecretKey', 'YOUR_SECRET_KEY' );

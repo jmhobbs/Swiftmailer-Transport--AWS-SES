@@ -50,10 +50,7 @@
 		*/
 		public function send( Swift_Mime_Message $message, &$failedRecipients = null ) {
 			$rendered = strval( $message );
-			$encoded = urlencode( base64_encode( $rendered ) );
-
 			$date = date( 'D, j F Y H:i:s O' );
-			
 			if( function_exists( 'hash_hmac' ) and in_array( 'sha1', hash_algos() ) ) {
 				$hmac = base64_encode( hash_hmac( 'sha1', $date, $this->AWSSecretKey, true ) );
 			}
@@ -64,7 +61,7 @@
 			$date_header = "Date: " . $date;
 			$auth_header = "X-Amzn-Authorization: AWS3-HTTPS AWSAccessKeyId=" . $this->AWSAccessKeyId . ", Algorithm=HmacSHA1, Signature=" . $hmac;
 
-			$this->doFsock( $date_header, $auth_header, $encoded );
+			$this->doFsock( $date_header, $auth_header, $message );
 
 			/**
 			* @TODO I'm sure we need code for partial failures, but I can't test
@@ -99,26 +96,13 @@
 		public function stop() {}
 		public function registerPlugin(Swift_Events_EventListener $plugin) {}
 
-		protected function doCurl ( $date_header, $auth_header, $encoded ) {
-			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_URL, $this->endpoint);
-			curl_setopt($ch, CURLOPT_POST, 1);
-			curl_setopt($ch, CURLOPT_POSTFIELDS, "Action=SendRawEmail&RawMessage.Data=" . urlencode ( $encoded ) );
-			curl_setopt($ch, CURLOPT_HTTPHEADER, array( $date_header, $auth_header ) );
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			$response = curl_exec($ch);
-			$info = curl_getinfo($ch);
-			curl_close($ch);
-		}
-
-		protected function doFsock ( $date_header, $auth_header, $encoded ) {
-
-			//$message->toByteStream(new AWSInputByteStream($socket))
+		protected function doFsock ( $date_header, $auth_header, $message ) {
 
 			$host = parse_url( $this->endpoint, PHP_URL_HOST );
 			$path = parse_url( $this->endpoint, PHP_URL_PATH );
 
 			$fp = fsockopen( 'ssl://' . $host , 443, $errno, $errstr, 30 );
+//			$fp = fopen( 'dump.http', 'w' );
 			if( ! $fp ) {
 		    		echo "$errstr ($errno)\n";
 			}
@@ -127,15 +111,20 @@
 				_fwrite( $fp, "POST $path HTTP/1.1\r\n" );
 				_fwrite( $fp, "Host: $host\r\n" );
 				_fwrite( $fp, "Content-Type: application/x-www-form-urlencoded\r\n" );
-				_fwrite( $fp, "Content-length: " . strlen( $encoded ) . "\r\n" );
+//				_fwrite( $fp, "Transfer-Encoding: chunked" );
 				_fwrite( $fp, "$date_header\r\n" );
-				_fwrite( $fp, "$auth_header\r\n" );
-				_fwrite( $fp, "Connection: close\r\n\r\n" );
+				_fwrite( $fp, "$auth_header\r\n\r\n" );
 				flush( $fp );
 
+	//			_fwrite( $fp, sprintf( "%x\r\n", 36 ) );
 				_fwrite( $fp, "Action=SendRawEmail" );
-				_fwrite( $fp, "&RawMessage.Data=" . $encoded . "\r\n" );
-				flush( $fp );
+				_fwrite( $fp, "&RawMessage.Data=\r\n"  );
+
+				$ais = new AWSInputByteStream($fp);
+				$message->toByteStream($ais);
+				$ais->flushBuffers();
+
+
 				echo "=======================================================\n";
 				while( ! feof( $fp ) ) {
 					echo fgets( $fp, 128 );
