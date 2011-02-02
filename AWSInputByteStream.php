@@ -36,8 +36,13 @@
 			echo "-    Overflow: $excess\n";
 			echo "-----------------------\n";
 			echo "      Writing: " . ( $tsize - $excess ) . "\n";
-			fwrite( $this->socket, base64_encode( substr( $this->buffer . $bytes, 0, $tsize - $excess ) ) );
+
+			$chunk = base64_encode( substr( $this->buffer . $bytes, 0, $tsize - $excess ) );
+			fwrite( $this->socket, sprintf( "%x\r\n", strlen( $chunk ) ) );
+			fwrite( $this->socket, $chunk . "\r\n" );
 			flush( $this->socket );
+			unset( $chunk );
+
 			if( $excess != 0 ) {
 				$this->buffer = substr( $this->buffer . $bytes, -1 * $excess );
 			}
@@ -66,9 +71,14 @@
 			echo "Buffer Size: " . strlen( $this->buffer ) . "\n";
 			echo "-----------------------\n";
 			if( strlen( $this->buffer ) > 0 ) {
-				fwrite( $this->socket, urlencode( base64_encode( $this->buffer ) ) );
+				$chunk = urlencode( base64_encode( $this->buffer ) );
+				fwrite( $this->socket, sprintf( "%x\r\n", strlen( $chunk ) ) );
+				fwrite( $this->socket, $chunk . "\r\n" );
 				flush( $this->socket );
 			}
+			fwrite( $this->socket, "0\r\n" );
+			fwrite( $this->socket, "\r\n" );
+			flush( $this->socket );
 		}
 
 		/**

@@ -111,19 +111,18 @@
 				_fwrite( $fp, "POST $path HTTP/1.1\r\n" );
 				_fwrite( $fp, "Host: $host\r\n" );
 				_fwrite( $fp, "Content-Type: application/x-www-form-urlencoded\r\n" );
-//				_fwrite( $fp, "Transfer-Encoding: chunked" );
+				_fwrite( $fp, "Transfer-Encoding: chunked\r\n" );
 				_fwrite( $fp, "$date_header\r\n" );
 				_fwrite( $fp, "$auth_header\r\n\r\n" );
 				flush( $fp );
 
-	//			_fwrite( $fp, sprintf( "%x\r\n", 36 ) );
-				_fwrite( $fp, "Action=SendRawEmail" );
-				_fwrite( $fp, "&RawMessage.Data=\r\n"  );
+				$post_fields_line = "Action=SendRawEmail&RawMessage.Data=";
+				_fwrite( $fp, sprintf( "%x\r\n", strlen($post_fields_line) ) );
+				_fwrite( $fp, $post_fields_line . "\r\n" );
 
 				$ais = new AWSInputByteStream($fp);
 				$message->toByteStream($ais);
 				$ais->flushBuffers();
-
 
 				echo "=======================================================\n";
 				while( ! feof( $fp ) ) {
