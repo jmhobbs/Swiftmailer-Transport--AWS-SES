@@ -11,7 +11,7 @@ It's a simple transport for use with Swiftmailer to send mail over AWS SES.
 Like any other Swiftmailer transport:
 
     //Create the Transport
-    $transport = new Swift_AWSTransport( 'AWS_ACCESS_KEY', 'AWS_SECRET_KEY' );
+    $transport = Swift_AWSTransport::newInstance( 'AWS_ACCESS_KEY', 'AWS_SECRET_KEY' );
     
     //Create the Mailer using your created Transport
     $mailer = Swift_Mailer::newInstance($transport);

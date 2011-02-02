@@ -47,9 +47,10 @@
 		* @param Swift_Mime_Message $message
 		* @param string[] &$failedRecipients to collect failures by-reference
 		* @return int
+		* @throws AWSConnectionError
 		*/
 		public function send( Swift_Mime_Message $message, &$failedRecipients = null ) {
-			$rendered = strval( $message );
+			
 			$date = date( 'D, j F Y H:i:s O' );
 			if( function_exists( 'hash_hmac' ) and in_array( 'sha1', hash_algos() ) ) {
 				$hmac = base64_encode( hash_hmac( 'sha1', $date, $this->AWSSecretKey, true ) );
@@ -57,23 +58,36 @@
 			else {
 				$hmac = $this->calculate_RFC2104HMAC( $date, $this->AWSSecretKey );
 			}
+			$auth = "AWS3-HTTPS AWSAccessKeyId=" . $this->AWSAccessKeyId . ", Algorithm=HmacSHA1, Signature=" . $hmac;
 
-			$date_header = "Date: " . $date;
-			$auth_header = "X-Amzn-Authorization: AWS3-HTTPS AWSAccessKeyId=" . $this->AWSAccessKeyId . ", Algorithm=HmacSHA1, Signature=" . $hmac;
+			$host = parse_url( $this->endpoint, PHP_URL_HOST );
+			$path = parse_url( $this->endpoint, PHP_URL_PATH );
 
-			$this->doFsock( $date_header, $auth_header, $message );
+			$fp = fsockopen( 'ssl://' . $host , 443, $errno, $errstr, 30 );
 
-			/**
-			* @TODO I'm sure we need code for partial failures, but I can't test
-			* multiple addresses until I get production access.
-			*/
-			/*if( 200 == $info['http_code'] ) {
+			if( ! $fp ) {
+				throw new AWSConnectionError( "$errstr ($errno)" );
+			}
+			
+			$socket = new ChunkedTransferSocket( $fp, $host, $path );
+			
+			$socket->header("Date", $date);
+			$socket->header("X-Amzn-Authorization", $auth);
+
+			$socket->write("Action=SendRawEmail&RawMessage.Data=");
+
+			$ais = new AWSInputByteStream($socket);
+			$message->toByteStream($ais);
+			$ais->flushBuffers();
+			
+			$result = $socket->read();
+
+			if( 200 == $result->code ) {
 				return count((array) $message->getTo());
 			}
 			else {
 				return 0;
-			}*/
-			return 1;
+			}
 		}
 
 		/**
@@ -95,48 +109,144 @@
 		public function start() {}
 		public function stop() {}
 		public function registerPlugin(Swift_Events_EventListener $plugin) {}
-
-		protected function doFsock ( $date_header, $auth_header, $message ) {
-
-			$host = parse_url( $this->endpoint, PHP_URL_HOST );
-			$path = parse_url( $this->endpoint, PHP_URL_PATH );
-
-			$fp = fsockopen( 'ssl://' . $host , 443, $errno, $errstr, 30 );
-//			$fp = fopen( 'dump.http', 'w' );
-			if( ! $fp ) {
-		    		echo "$errstr ($errno)\n";
-			}
-			else {
-				echo "=======================================================\n";
-				_fwrite( $fp, "POST $path HTTP/1.1\r\n" );
-				_fwrite( $fp, "Host: $host\r\n" );
-				_fwrite( $fp, "Content-Type: application/x-www-form-urlencoded\r\n" );
-				_fwrite( $fp, "Transfer-Encoding: chunked\r\n" );
-				_fwrite( $fp, "$date_header\r\n" );
-				_fwrite( $fp, "$auth_header\r\n\r\n" );
-				flush( $fp );
-
-				$post_fields_line = "Action=SendRawEmail&RawMessage.Data=";
-				_fwrite( $fp, sprintf( "%x\r\n", strlen($post_fields_line) ) );
-				_fwrite( $fp, $post_fields_line . "\r\n" );
-
-				$ais = new AWSInputByteStream($fp);
-				$message->toByteStream($ais);
-				$ais->flushBuffers();
-
-				echo "=======================================================\n";
-				while( ! feof( $fp ) ) {
-					echo fgets( $fp, 128 );
-				}
-				fclose( $fp );
-				echo "=======================================================\n";
-			}
-		}
 		
 	} // AWSTransport
 
 
-	function _fwrite ( $fp, $msg ) {
-		fwrite( $fp, $msg );
-		echo $msg;
+	/**
+	 * Convenience methods to use a socket for chunked transfer in HTTP
+	 */
+	class ChunkedTransferSocket {
+	
+		/**
+		 * @param $socket
+		 * @param $host
+		 * @param $path
+		 * @param $method
+		 */
+		public function __construct( $socket, $host, $path, $method="POST" ) {
+			
+			$this->socket = $socket;
+			$this->write_started = false;
+			$this->write_finished = false;
+			$this->read_started = false;
+			
+			fwrite( $this->socket, "$method $path HTTP/1.1\r\n" );
+			
+			$this->header( "Host", $host );
+			if( "POST" == $method ) {
+				$this->header( "Content-Type", "application/x-www-form-urlencoded" );	
+			}
+			$this->header( "Connection", "close" );
+			$this->header( "Transfer-Encoding", "chunked" );
+		}
+		
+		/**
+		 * Add an HTTP header
+		 *
+		 * @param $header
+		 * @param $value
+		 */
+		public function header ( $header, $value ) {
+			if( $this->write_started ) { throw new InvalidOperationException( "Can not write header, body writing has started." ); }
+			fwrite( $this->socket, "$header: $value\r\n" );
+			flush( $this->socket );
+		}
+		
+		/**
+		 * Write a chunk of data
+		 * @param $chunk
+		 */
+		public function write ( $chunk ) {
+			if( $this->write_finished ) { throw new InvalidOperationException( "Can not write, reading has started." ); }
+			
+			if( ! $this->write_started ) {
+				fwrite( $this->socket, "\r\n" ); // Start message body
+				$this->write_started = true;
+			}
+			
+			fwrite( $this->socket, sprintf( "%x\r\n", strlen( $chunk ) ) );
+			fwrite( $this->socket, $chunk . "\r\n" );
+			flush( $this->socket );
+		}
+		
+		/**
+		 * Finish writing chunks and get ready to read.
+		 */
+		public function finishWrite () {
+			$this->write("");
+			$this->write_finished = true;
+		}
+		
+		/**
+		 * Read the socket for a response
+		 */
+		public function read () {
+			if( ! $this->write_finished ) { $this->finishWrite(); }
+			$this->read_started = true;
+
+			$response = new AWSResponse();
+			while( ! feof( $this->socket ) ) {
+				$response->line( fgets( $this->socket ) );
+			}
+			$response->complete();
+			fclose( $this->socket );
+			
+			return $response;
+		}
+		
 	}
+	
+	/**
+	 * A wrapper to parse an AWS HTTP response
+	 */
+	class AWSResponse {
+	
+		public $headers = array();
+		public $code = 0;
+		public $message = '';
+		public $body = '';
+		public $xml = null;
+		
+		const STATE_EMPTY = 0;
+		const STATE_HEADERS = 1;
+		const STATE_BODY = 2;
+		
+		protected $state = STATE_EMPTY;
+	
+		public function line ( $line ) {
+			
+			switch( $this->state ) {
+				case STATE_EMPTY:
+					$split = explode( ' ', $line );
+					$this->code = $split[1];
+					$this->message = implode( array_slice( $split, 2 ), ' ' );	
+					$this->state = STATE_HEADERS;
+					break;
+				case STATE_HEADERS:
+					if( "\r\n" == $line ) {
+						$this->state = STATE_BODY;
+						break;
+					}
+					
+					$pos = strpos( $line, ':' );
+					if( false === $pos ) { throw new InvalidHeaderException( $line ); }
+					$key = substr( $line, 0, $pos );
+					$this->headers[$key] = substr( $line, $pos );			
+					break;
+				case STATE_BODY:
+					$this->body .= $line;
+					break;
+			}
+			
+		}
+		
+		public function complete () {
+			$this->xml = simplexml_load_string( $this->body );
+		}
+		
+	}
+	
+	class AWSConnectionError extends Exception {}
+	class InvalidOperationException extends Exception {}
+	class InvalidHeaderException extends Exception {}

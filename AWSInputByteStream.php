@@ -20,28 +20,15 @@
 		 *
 		 * @param string $bytes
 		 * @return int
-		 * @throws Swift_IoException
 		 */
 		public function write($bytes) {
-			$tsize = strlen( $this->buffer ) + strlen( $bytes );
-			$excess = $tsize % 3;
+			
+			$total_size = strlen( $this->buffer ) + strlen( $bytes );
+			$excess = $total_size % 3; 
 			 
-			if( $tsize - $excess == 0 ) { return ++$this->counter; }
-			 
-			echo "-------[ WRITE ]-------\n";
-			echo "   Bytes Size: " . strlen( $bytes ) . "\n";
-			echo "+ Buffer Size: " . strlen( $this->buffer ) . "\n";
-			echo "-----------------------\n";
-			echo "        Total: $tsize\n";
-			echo "-    Overflow: $excess\n";
-			echo "-----------------------\n";
-			echo "      Writing: " . ( $tsize - $excess ) . "\n";
+			if( $total_size - $excess == 0 ) { return ++$this->counter; }
 
-			$chunk = base64_encode( substr( $this->buffer . $bytes, 0, $tsize - $excess ) );
-			fwrite( $this->socket, sprintf( "%x\r\n", strlen( $chunk ) ) );
-			fwrite( $this->socket, $chunk . "\r\n" );
-			flush( $this->socket );
-			unset( $chunk );
+			$this->socket->write( base64_encode( substr( $this->buffer . $bytes, 0, $total_size - $excess ) ) );
 
 			if( $excess != 0 ) {
 				$this->buffer = substr( $this->buffer . $bytes, -1 * $excess );
@@ -49,36 +36,23 @@
 			else {
 				$this->buffer = '';
 			}
-			echo "         Kept: " . strlen( $this->buffer ) . "\n";
-			echo "-----------------------\n";
-			echo "\n\n\n";
+			
 			return ++$this->counter;
 		}
   
 		/**
 		 * For any bytes that are currently buffered inside the stream, force them
 		 * off the buffer.
-		 * 
-		 * @throws Swift_IoException
 		 */
 		public function commit() {
 			// NOP - Since we have a required packet offset (3-bytes), we can't commit arbitrarily.
 		}
 
-
 		public function flushBuffers() {
-			echo "-------[ FLUSH ]-------\n";
-			echo "Buffer Size: " . strlen( $this->buffer ) . "\n";
-			echo "-----------------------\n";
 			if( strlen( $this->buffer ) > 0 ) {
-				$chunk = urlencode( base64_encode( $this->buffer ) );
-				fwrite( $this->socket, sprintf( "%x\r\n", strlen( $chunk ) ) );
-				fwrite( $this->socket, $chunk . "\r\n" );
-				flush( $this->socket );
+				$this->socket->write( urlencode( base64_encode( $this->buffer ) ) );
 			}
-			fwrite( $this->socket, "0\r\n" );
-			fwrite( $this->socket, "\r\n" );
-			flush( $this->socket );
+			$this->socket->finishWrite();
 		}
 
 		/**

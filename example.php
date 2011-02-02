@@ -7,7 +7,7 @@
 	define( 'AWSSecretKey', 'YOUR_SECRET_KEY' );
 
 	//Create the Transport
-	$transport = new Swift_AWSTransport( AWSAccessKeyId, AWSSecretKey );
+	$transport = Swift_AWSTransport::newInstance( AWSAccessKeyId, AWSSecretKey );
 
 	//Create the Mailer using your created Transport
 	$mailer = Swift_Mailer::newInstance($transport);
@@ -20,4 +20,4 @@
 	->setBody("<p>Dude, I'm <b>totally</b> sending you email via AWS.</p>", 'text/html')
 	->addPart("Dude, I'm _totally_ sending you email via AWS.", 'text/plain');
 
-	$mailer->send( $message );
+	echo "Sent: " . $mailer->send( $message ) . "\n";
