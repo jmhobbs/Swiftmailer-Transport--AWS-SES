@@ -1,4 +1,8 @@
 <?php
+	// Defining this constant will make the AWS Transport
+	// dump the XML recieved from AWS.
+	//define( 'SWIFT_AWS_DEBUG', true );
+
 	require_once 'lib/swift_required.php';
 	require_once 'AWSTransport.php';
 	require_once 'AWSInputByteStream.php';

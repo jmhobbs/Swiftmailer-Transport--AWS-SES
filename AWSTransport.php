@@ -82,6 +82,13 @@
 			
 			$result = $socket->read();
 
+			if( defined('SWIFT_AWS_DEBUG') ) {
+				echo "=== Start AWS Response ===\r\n";
+				echo $result->body;
+				echo "===  End AWS Response  ===\r\n";
+			}
+
+
 			if( 200 == $result->code ) {
 				return count((array) $message->getTo());
 			}
