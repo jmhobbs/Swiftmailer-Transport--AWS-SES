@@ -28,7 +28,7 @@
 			 
 			if( $total_size - $excess == 0 ) { return ++$this->counter; }
 
-			$this->socket->write( base64_encode( substr( $this->buffer . $bytes, 0, $total_size - $excess ) ) );
+			$this->socket->write( urlencode( base64_encode( substr( $this->buffer . $bytes, 0, $total_size - $excess ) ) ) );
 
 			if( $excess != 0 ) {
 				$this->buffer = substr( $this->buffer . $bytes, -1 * $excess );
