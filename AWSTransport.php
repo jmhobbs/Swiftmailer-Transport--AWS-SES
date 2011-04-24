@@ -157,7 +157,6 @@
 		public function header ( $header, $value ) {
 			if( $this->write_started ) { throw new InvalidOperationException( "Can not write header, body writing has started." ); }
 			fwrite( $this->socket, "$header: $value\r\n" );
-			flush( $this->socket );
 		}
 		
 		/**
@@ -174,7 +173,6 @@
 			
 			fwrite( $this->socket, sprintf( "%x\r\n", strlen( $chunk ) ) );
 			fwrite( $this->socket, $chunk . "\r\n" );
-			flush( $this->socket );
 		}
 		
 		/**
