@@ -21,3 +21,8 @@ Like any other Swiftmailer transport:
     $mailer = Swift_Mailer::newInstance($transport);
     
     $mailer->send($message);
+
+# Credits
+
+* @jmhobbs - Original development
+* @bertrandom - Bug fix
