@@ -219,20 +219,20 @@
 		const STATE_HEADERS = 1;
 		const STATE_BODY = 2;
 		
-		protected $state = STATE_EMPTY;
+		protected $state = self::STATE_EMPTY;
 	
 		public function line ( $line ) {
 			
 			switch( $this->state ) {
-				case STATE_EMPTY:
+				case self::STATE_EMPTY:
 					$split = explode( ' ', $line );
 					$this->code = $split[1];
 					$this->message = implode( array_slice( $split, 2 ), ' ' );	
-					$this->state = STATE_HEADERS;
+					$this->state = self::STATE_HEADERS;
 					break;
-				case STATE_HEADERS:
+				case self::STATE_HEADERS:
 					if( "\r\n" == $line ) {
-						$this->state = STATE_BODY;
+						$this->state = self::STATE_BODY;
 						break;
 					}
 					
@@ -241,7 +241,7 @@
 					$key = substr( $line, 0, $pos );
 					$this->headers[$key] = substr( $line, $pos );			
 					break;
-				case STATE_BODY:
+				case self::STATE_BODY:
 					$this->body .= $line;
 					break;
 			}
