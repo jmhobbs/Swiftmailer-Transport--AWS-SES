@@ -25,3 +25,4 @@
 	->addPart("Dude, I'm _totally_ sending you email via AWS.", 'text/plain');
 
 	echo "Sent: " . $mailer->send( $message ) . "\n";
+?>
