@@ -28,7 +28,7 @@
 			$this->endpoint = $endpoint;
 			$this->debug = $debug;
 		}
-		
+
 		/**
 		* Create a new AWSTransport.
 		* @param string $AWSAccessKeyId Your access key.
@@ -37,7 +37,7 @@
 		public static function newInstance( $AWSAccessKeyId , $AWSSecretKey ) {
 			return new Swift_AWSTransport( $AWSAccessKeyId , $AWSSecretKey );
 		}
-		
+
 		/**
 		* Send the given Message.
 		*
@@ -68,9 +68,9 @@
 			if( ! $fp ) {
 				throw new AWSConnectionError( "$errstr ($errno)" );
 			}
-			
+
 			$socket = new ChunkedTransferSocket( $fp, $host, $path );
-			
+
 			$socket->header("Date", $date);
 			$socket->header("X-Amzn-Authorization", $auth);
 
@@ -79,7 +79,7 @@
 			$ais = new AWSInputByteStream($socket);
 			$message->toByteStream($ais);
 			$ais->flushBuffers();
-			
+
 			$result = $socket->read();
 
 			if( defined('SWIFT_AWS_DEBUG') ) {
@@ -124,7 +124,7 @@
 	 * Convenience methods to use a socket for chunked transfer in HTTP
 	 */
 	class ChunkedTransferSocket {
-	
+
 		/**
 		 * @param $socket
 		 * @param $host
@@ -132,22 +132,22 @@
 		 * @param $method
 		 */
 		public function __construct( $socket, $host, $path, $method="POST" ) {
-			
+
 			$this->socket = $socket;
 			$this->write_started = false;
 			$this->write_finished = false;
 			$this->read_started = false;
-			
+
 			fwrite( $this->socket, "$method $path HTTP/1.1\r\n" );
-			
+
 			$this->header( "Host", $host );
 			if( "POST" == $method ) {
-				$this->header( "Content-Type", "application/x-www-form-urlencoded" );	
+				$this->header( "Content-Type", "application/x-www-form-urlencoded" );
 			}
 			$this->header( "Connection", "close" );
 			$this->header( "Transfer-Encoding", "chunked" );
 		}
-		
+
 		/**
 		 * Add an HTTP header
 		 *
@@ -159,24 +159,24 @@
 			fwrite( $this->socket, "$header: $value\r\n" );
 			fflush( $this->socket );
 		}
-		
+
 		/**
 		 * Write a chunk of data
 		 * @param $chunk
 		 */
 		public function write ( $chunk ) {
 			if( $this->write_finished ) { throw new InvalidOperationException( "Can not write, reading has started." ); }
-			
+
 			if( ! $this->write_started ) {
 				fwrite( $this->socket, "\r\n" ); // Start message body
 				$this->write_started = true;
 			}
-			
+
 			fwrite( $this->socket, sprintf( "%x\r\n", strlen( $chunk ) ) );
 			fwrite( $this->socket, $chunk . "\r\n" );
 			fflush( $this->socket );
 		}
-		
+
 		/**
 		 * Finish writing chunks and get ready to read.
 		 */
@@ -184,7 +184,7 @@
 			$this->write("");
 			$this->write_finished = true;
 		}
-		
+
 		/**
 		 * Read the socket for a response
 		 */
@@ -198,36 +198,36 @@
 			}
 			$response->complete();
 			fclose( $this->socket );
-			
+
 			return $response;
 		}
-		
+
 	}
-	
+
 	/**
 	 * A wrapper to parse an AWS HTTP response
 	 */
 	class AWSResponse {
-	
+
 		public $headers = array();
 		public $code = 0;
 		public $message = '';
 		public $body = '';
 		public $xml = null;
-		
+
 		const STATE_EMPTY = 0;
 		const STATE_HEADERS = 1;
 		const STATE_BODY = 2;
-		
+
 		protected $state = self::STATE_EMPTY;
-	
+
 		public function line ( $line ) {
-			
+
 			switch( $this->state ) {
 				case self::STATE_EMPTY:
 					$split = explode( ' ', $line );
 					$this->code = $split[1];
-					$this->message = implode( array_slice( $split, 2 ), ' ' );	
+					$this->message = implode( array_slice( $split, 2 ), ' ' );
 					$this->state = self::STATE_HEADERS;
 					break;
 				case self::STATE_HEADERS:
@@ -235,25 +235,25 @@
 						$this->state = self::STATE_BODY;
 						break;
 					}
-					
+
 					$pos = strpos( $line, ':' );
 					if( false === $pos ) { throw new InvalidHeaderException( $line ); }
 					$key = substr( $line, 0, $pos );
-					$this->headers[$key] = substr( $line, $pos );			
+					$this->headers[$key] = substr( $line, $pos );
 					break;
 				case self::STATE_BODY:
 					$this->body .= $line;
 					break;
 			}
-			
+
 		}
-		
+
 		public function complete () {
 			$this->xml = simplexml_load_string( $this->body );
 		}
-		
+
 	}
-	
+
 	class AWSConnectionError extends Exception {}
 	class InvalidOperationException extends Exception {}
 	class InvalidHeaderException extends Exception {}
