@@ -22,7 +22,25 @@ Like any other Swiftmailer transport:
     
     $mailer->send($message);
 
+# Symfony1.X configuration
+
+    ```yml
+    # app/frontend/config/factories.yml
+
+    all:
+      mailer:
+        class: sfMailer
+        param:
+          transport:
+            accessKeyId:    your-access-key
+            secretKey:      Y0uR-$3cr3t5-k3y
+            debug:          false
+            endpoint:       'https://email.us-east-1.amazonaws.com/' # make sure to use trailing slash !
+    ```
+
 # Credits
 
 * @jmhobbs - Original development
 * @bertrandom - Bug fix
+* @themouette - Plugins & Symfony compatible
+
