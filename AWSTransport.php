@@ -13,7 +13,7 @@
 	* @subpackage Transport
 	* @author John Hobbs
 	*/
-	class Swift_AWSTransport implements Swift_Transport {
+	class Swift_AWSTransport extends Swift_Transport_AWSTransport {
 
 		/** the service access key */
 		private $AWSAccessKeyId;
@@ -155,19 +155,7 @@
 
 			$result = $socket->read();
 
-			if( defined('SWIFT_AWS_DEBUG') ) {
-				echo "=== Start AWS Response ===\r\n";
-				echo $result->body;
-				echo "===  End AWS Response  ===\r\n";
-			}
-
-
-			if( 200 == $result->code ) {
-				return count((array) $message->getTo());
-			}
-			else {
-				return 0;
-			}
+			return $result;
 		}
 
 		/**
