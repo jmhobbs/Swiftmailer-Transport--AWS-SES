@@ -15,6 +15,15 @@
 	*/
 	class Swift_AWSTransport implements Swift_Transport {
 
+		/** the service access key */
+		private $AWSAccessKeyId;
+		/** the service secret key */
+		private $AWSSecretKey;
+		/** the service endpoint */
+		private $endpoint;
+		/** is debug mode activated */
+		private $debug;
+
 		/**
 		* Create a new AWSTransport.
 		* @param string $AWSAccessKeyId Your access key.
@@ -22,7 +31,13 @@
 		* @param boolean $debug Set to true to enable debug messages.
 		* @param string $endpoint The AWS endpoint to use.
 		*/
-		public function __construct($AWSAccessKeyId , $AWSSecretKey, $debug = false, $endpoint = 'https://email.us-east-1.amazonaws.com/') {
+		public function __construct($AWSAccessKeyId = null , $AWSSecretKey = null, $debug = false, $endpoint = 'https://email.us-east-1.amazonaws.com/') {
+			call_user_func_array(
+				array($this, 'Swift_Transport_AWSTransport::__construct'),
+				Swift_DependencyContainer::getInstance()
+					->createDependenciesFor('transport.aws')
+				);
+
 			$this->AWSAccessKeyId = $AWSAccessKeyId;
 			$this->AWSSecretKey = $AWSSecretKey;
 			$this->endpoint = $endpoint;
@@ -38,6 +53,22 @@
 			return new Swift_AWSTransport( $AWSAccessKeyId , $AWSSecretKey );
 		}
 
+		public function setAccessKeyId($val) {
+			$this->AWSAccessKeyId = $val;
+		}
+
+		public function setSecretKey($val) {
+			$this->AWSSecretKey = $val;
+		}
+
+		public function setDebug($val) {
+			$this->debug = $val;
+		}
+
+		public function setEndpoint($val) {
+			$this->endpoint = $val;
+		}
+
 		/**
 		* Send the given Message.
 		*
@@ -50,7 +81,49 @@
 		* @throws AWSConnectionError
 		*/
 		public function send( Swift_Mime_Message $message, &$failedRecipients = null ) {
-			
+
+			if ($evt = $this->_eventDispatcher->createSendEvent($this, $message))
+			{
+				$this->_eventDispatcher->dispatchEvent($evt, 'beforeSendPerformed');
+				if ($evt->bubbleCancelled())
+				{
+					return 0;
+				}
+			}
+
+			$result = $this->_doSend($message, $failedRecipients);
+
+			if( defined('SWIFT_AWS_DEBUG') || $this->debug ) {
+				echo "=== Start AWS Response ===\r\n";
+				echo $result->body;
+				echo "===	End AWS Response	===\r\n";
+			}
+
+			$success = (200 == $result->code);
+
+			if ($evt)
+			{
+				$evt->setResult($success ? Swift_Events_SendEvent::RESULT_SUCCESS : Swift_Events_SendEvent::RESULT_FAILED);
+				$this->_eventDispatcher->dispatchEvent($evt, 'sendPerformed');
+			}
+
+			if( $success ) {
+				return count((array) $message->getTo());
+			}
+			else {
+				return 0;
+			}
+		}
+
+		/**
+		 * do send through the API
+		 *
+		 * @param Swift_Mime_Message $message
+		 * @param string[] &$failedRecipients to collect failures by-reference
+		 * @return AWSResponse
+		 */
+		protected function _doSend( Swift_Mime_Message $message, &$failedRecipients = null )
+		{
 			$date = date( 'D, j F Y H:i:s O' );
 			if( function_exists( 'hash_hmac' ) and in_array( 'sha1', hash_algos() ) ) {
 				$hmac = base64_encode( hash_hmac( 'sha1', $date, $this->AWSSecretKey, true ) );
@@ -115,8 +188,17 @@
 		public function isStarted() {}
 		public function start() {}
 		public function stop() {}
-		public function registerPlugin(Swift_Events_EventListener $plugin) {}
-		
+
+		/**
+		 * Register a plugin.
+		 *
+		 * @param Swift_Events_EventListener $plugin
+		 */
+		public function registerPlugin(Swift_Events_EventListener $plugin)
+		{
+			$this->_eventDispatcher->bindEventListener($plugin);
+		}
+
 	} // AWSTransport
 
 
@@ -225,6 +307,9 @@
 
 			switch( $this->state ) {
 				case self::STATE_EMPTY:
+					if( ! $line ) {
+						throw new AWSEmptyResponseException();
+					}
 					$split = explode( ' ', $line );
 					$this->code = $split[1];
 					$this->message = implode( array_slice( $split, 2 ), ' ' );
@@ -257,3 +342,4 @@
 	class AWSConnectionError extends Exception {}
 	class InvalidOperationException extends Exception {}
 	class InvalidHeaderException extends Exception {}
+	class AWSEmptyResponseException extends Exception {}
