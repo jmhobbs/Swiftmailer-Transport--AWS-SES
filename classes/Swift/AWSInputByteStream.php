@@ -1,6 +1,6 @@
 <?php
 
-	class AWSInputByteStream implements Swift_InputByteStream {
+	class Swift_AWSInputByteStream implements Swift_InputByteStream {
 
 		public function __construct( $socket ) {
 			$this->socket = $socket;

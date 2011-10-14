@@ -149,7 +149,7 @@
 
 			$socket->write("Action=SendRawEmail&RawMessage.Data=");
 
-			$ais = new AWSInputByteStream($socket);
+			$ais = new Swift_AWSInputByteStream($socket);
 			$message->toByteStream($ais);
 			$ais->flushBuffers();
 
