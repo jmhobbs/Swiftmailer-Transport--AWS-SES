@@ -23,6 +23,8 @@
 		private $endpoint;
 		/** is debug mode activated */
 		private $debug;
+		/** the response */
+		private $response;
 
 		/**
 		* Create a new AWSTransport.
@@ -69,6 +71,10 @@
 			$this->endpoint = $val;
 		}
 
+		public function getResponse() {
+			return $this->response;
+		}
+
 		/**
 		* Send the given Message.
 		*
@@ -91,15 +97,15 @@
 				}
 			}
 
-			$result = $this->_doSend($message, $failedRecipients);
+			$this->response = $this->_doSend($message, $failedRecipients);
 
 			if( defined('SWIFT_AWS_DEBUG') || $this->debug ) {
 				echo "=== Start AWS Response ===\r\n";
-				echo $result->body;
+				echo $this->response->body;
 				echo "===	End AWS Response	===\r\n";
 			}
 
-			$success = (200 == $result->code);
+			$success = (200 == $this->response->code);
 
 			if ($evt)
 			{
