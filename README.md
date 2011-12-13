@@ -38,9 +38,16 @@ Like any other Swiftmailer transport:
             endpoint:       'https://email.us-east-1.amazonaws.com/' # make sure to use trailing slash !
     ```
 
+# Swiftmailer Version
+
+Please note that some users [have had issues with older versions of Swiftmailer](https://github.com/jmhobbs/Swiftmailer-Transport--AWS-SES/issues/13).
+
+Versions 4.1.3 and up should work fine.
+
 # Credits
 
 * @jmhobbs - Original development
 * @bertrandom - Bug fix
 * @themouette - Plugins & Symfony compatible
 
+* @jonatrey & @faz - Debugging and Testing issue #13
