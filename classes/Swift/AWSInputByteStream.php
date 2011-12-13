@@ -23,19 +23,32 @@
 		 */
 		public function write($bytes) {
 
-			$total_size = strlen( $this->buffer ) + strlen( $bytes );
-			$excess = $total_size % 3;
+			$block = $this->buffer . $bytes;
+			$block_size = strlen( $block );
+			$encoded = base64_encode( $block );
 
-			if( $total_size - $excess == 0 ) { return ++$this->counter; }
+			$setback = 0;
+			while( substr( $encoded, -1 ) === '=' ) {
+				++$setback;
+				if( $setback >= $block_size ) {
+					$this->buffer = $block; 
+					return ++$this->counter;
+				}
+				$encoded = base64_encode( substr( $block, 0, $setback * -1 ) );
+			}
 
-			$this->socket->write( urlencode( base64_encode( substr( $this->buffer . $bytes, 0, $total_size - $excess ) ) ) );
-
-			if( $excess != 0 ) {
-				$this->buffer = substr( $this->buffer . $bytes, -1 * $excess );
+			if( $setback > 0 ) { 
+				$this->buffer = substr( $block, $setback * -1 );
 			}
 			else {
 				$this->buffer = '';
 			}
+
+			unset( $block );
+
+			$this->socket->write( urlencode( $encoded ) );
+
+			unset( $encoded );
 
 			return ++$this->counter;
 		}
