@@ -100,9 +100,9 @@
 			$this->response = $this->_doSend($message, $failedRecipients);
 
 			if( defined('SWIFT_AWS_DEBUG') || $this->debug ) {
-				echo "=== Start AWS Response ===\r\n";
-				echo $this->response->body;
-				echo "===	End AWS Response	===\r\n";
+				error_log("=== Start AWS Response ===");
+				error_log($this->response->body);
+				error_log("=== End AWS Response ===");
 			}
 
 			$success = (200 == $this->response->code);
