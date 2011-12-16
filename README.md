@@ -2,6 +2,8 @@
 
 It's a simple transport for use with Swiftmailer to send mail over AWS SES.
 
+As on December 2011, Amazon [provides an SMTP interface to SES](http://aws.amazon.com/ses/faqs/#21), so you may prefer to use Swiftmailer's built in SMTP transport.
+
 # Where do I put it?
 
 Whereever you want, so long as you include it in your code.
