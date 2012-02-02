@@ -26,7 +26,7 @@ Like any other Swiftmailer transport:
 
 # Symfony1.X configuration
 
-    ```yml
+    ```yaml
     # app/frontend/config/factories.yml
 
     all:
@@ -34,6 +34,7 @@ Like any other Swiftmailer transport:
         class: sfMailer
         param:
           transport:
+            class:          Swift_AWSTransport
             accessKeyId:    your-access-key
             secretKey:      Y0uR-$3cr3t5-k3y
             debug:          false
