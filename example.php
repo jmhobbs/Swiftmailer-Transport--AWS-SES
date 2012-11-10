@@ -9,7 +9,7 @@
 
 	//Create the Transport
 	$transport = Swift_AWSTransport::newInstance( AWSAccessKeyId, AWSSecretKey );
-	$transport->setDebug( true ); // Print's the response from AWS for debugging.
+	$transport->setDebug( true ); // Print the response from AWS to the error log for debugging.
 
 	//Create the Mailer using your created Transport
 	$mailer = Swift_Mailer::newInstance( $transport );

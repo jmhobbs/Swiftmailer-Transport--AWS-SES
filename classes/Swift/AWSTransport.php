@@ -21,7 +21,15 @@
 		private $AWSSecretKey;
 		/** the service endpoint */
 		private $endpoint;
-		/** is debug mode activated */
+		/**
+		 * Debugging helper.
+		 *
+		 * If false, no debugging will be done.
+		 * If true, debugging will be done with error_log.
+		 * Otherwise, this should be a callable, and will recieve the debug message as the first argument.
+		 *
+		 * @seealso Swift_AWSTransport::setDebug()
+		 */
 		private $debug;
 		/** the response */
 		private $response;
@@ -30,7 +38,7 @@
 		* Create a new AWSTransport.
 		* @param string $AWSAccessKeyId Your access key.
 		* @param string $AWSSecretKey Your secret key.
-		* @param boolean $debug Set to true to enable debug messages.
+		* @param boolean $debug Set to true to enable debug messages in error log.
 		* @param string $endpoint The AWS endpoint to use.
 		*/
 		public function __construct($AWSAccessKeyId = null , $AWSSecretKey = null, $debug = false, $endpoint = 'https://email.us-east-1.amazonaws.com/') {
@@ -75,6 +83,12 @@
 			return $this->response;
 		}
 
+		protected function _debug ( $message ) {
+			if( false === $this->debug ) { return; }
+			if( true === $this->debug ) { error_log( $message ); }
+			else { call_user_func( $this->debug, $message ); }
+		}
+
 		/**
 		* Send the given Message.
 		*
@@ -99,11 +113,9 @@
 
 			$this->response = $this->_doSend($message, $failedRecipients);
 
-			if( defined('SWIFT_AWS_DEBUG') || $this->debug ) {
-				error_log("=== Start AWS Response ===");
-				error_log($this->response->body);
-				error_log("=== End AWS Response ===");
-			}
+			$this->_debug("=== Start AWS Response ===");
+			$this->_debug($this->response->body);
+			$this->_debug("=== End AWS Response ===");
 
 			$success = (200 == $this->response->code);
 
