@@ -84,9 +84,11 @@
 		}
 
 		protected function _debug ( $message ) {
-			if( false === $this->debug ) { return; }
-			if( true === $this->debug ) { error_log( $message ); }
-			else { call_user_func( $this->debug, $message ); }
+			if ( true === $this->debug ) {
+				error_log( $message );
+			} elseif ( is_callable($this->debug) ) {
+				call_user_func( $this->debug, $message );
+			}
 		}
 
 		/**
