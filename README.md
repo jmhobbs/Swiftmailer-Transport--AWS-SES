@@ -52,5 +52,5 @@ Versions 4.1.3 and up should work fine.
 * @jmhobbs - Original development
 * @bertrandom - Bug fix
 * @themouette - Plugins & Symfony compatible
-
 * @jonatrey & @faz - Debugging and Testing issue #13
+* @casconed - Made debug function more robust, issue #21
