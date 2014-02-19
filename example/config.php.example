@@ -1,0 +1,10 @@
+<?php
+	// AWS Credentials
+	define( 'AWSAccessKeyId', 'your-access-key' );
+	define( 'AWSSecretKey', 'your-secret-key' );
+
+	// Email address to send test email from
+	define( 'FROM_ADDRESS', 'change-this@to-your-email.com' );
+
+	// Email address to send test email to
+	define( 'TO_ADDRESS', 'change-this@as-well-please.com' );
