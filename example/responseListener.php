@@ -10,7 +10,7 @@
 	require_once('./config.php');
 	
 	$transport = Swift_AWSTransport::newInstance( AWSAccessKeyId, AWSSecretKey );
-	$transport->setEndpoint( 'https://email.eu-west-1.amazonaws.com/' );
+	$transport->setEndpoint( AWSSESEndpoint );
 	$transport->setDebug( true ); // Print the response from AWS to the error log for debugging.
 	$transport->registerPlugin(
 		new Swift_Events_ResponseReceivedListener( function ( $message, $body ) {

@@ -8,3 +8,6 @@
 
 	// Email address to send test email to
 	define( 'TO_ADDRESS', 'change-this@as-well-please.com' );
+	
+	// Set the correct endpoint. http://docs.aws.amazon.com/general/latest/gr/rande.html#ses_region
+	define( 'AWSSESEndpoint', 'https://email.us-east-1.amazonaws.com/' );
