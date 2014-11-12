@@ -41,6 +41,16 @@ Like any other Swiftmailer transport:
             endpoint:       'https://email.us-east-1.amazonaws.com/' # make sure to use trailing slash !
     ```
 
+# How do I get the message ID on send?
+
+You need to register the Swift_Events_ResponseReceivedListener plugin with a callback.  See example/responseListener.php for details.
+
+    $transport->registerPlugin(
+    	new Swift_Events_ResponseReceivedListener( function ( $message, $body ) {
+    		echo sprintf( "Message-ID %s.\n", $body->SendRawEmailResult->MessageId );
+    	})
+    );
+
 # Swiftmailer Version
 
 Please note that some users [have had issues with older versions of Swiftmailer](https://github.com/jmhobbs/Swiftmailer-Transport--AWS-SES/issues/13).
@@ -54,3 +64,4 @@ Versions 4.1.3 and up should work fine.
 * @themouette - Plugins & Symfony compatible
 * @jonatrey & @faz - Debugging and Testing issue #13
 * @casconed - Made debug function more robust, issue #21
+* @martijngastkemper - Added responseReceived event to get message id from AWS
