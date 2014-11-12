@@ -120,6 +120,9 @@
 			$this->_debug("=== End AWS Response ===");
 
 			$success = (200 == $this->response->code);
+			
+			if ($respEvent = $this->_eventDispatcher->createResponseEvent($this, new Swift_Response_AWSResponse( $message, $this->response->xml ), $success))
+				$this->_eventDispatcher->dispatchEvent($respEvent, 'responseReceived');
 
 			if ($evt)
 			{
