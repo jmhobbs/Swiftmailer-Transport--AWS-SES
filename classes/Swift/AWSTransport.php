@@ -1,4 +1,6 @@
 <?php
+
+use Symfony\Component\EventDispatcher\EventDispatcher;
 	/*
 	* This file requires SwiftMailer.
 	* (c) 2011 John Hobbs
@@ -33,6 +35,8 @@
 		private $debug;
 		/** the response */
 		private $response;
+		
+		private $awsDispatcher;
 
 		/**
 		* Create a new AWSTransport.
@@ -52,8 +56,15 @@
 			$this->AWSSecretKey = $AWSSecretKey;
 			$this->endpoint = $endpoint;
 			$this->debug = $debug;
+			
+			$this->awsDispatcher = new EventDispatcher();
 		}
 
+		function getAwsDispatcher()
+		{
+			return $this->awsDispatcher;
+		}
+		
 		/**
 		* Create a new AWSTransport.
 		* @param string $AWSAccessKeyId Your access key.
@@ -121,8 +132,8 @@
 
 			$success = (200 == $this->response->code);
 			
-			if ($respEvent = $this->_eventDispatcher->createResponseEvent($this, new Swift_Response_AWSResponse( $message, $this->response->xml ), $success))
-				$this->_eventDispatcher->dispatchEvent($respEvent, 'responseReceived');
+			$event = new Swift_AWSTransport_ResponseEvent( $message, $this->response->xml );
+			$this->awsDispatcher->dispatch(  Swift_AWSTransport_Events::RESPONSE_RECEIVED, $event);
 
 			if ($evt)
 			{
