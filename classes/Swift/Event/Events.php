@@ -1,6 +1,6 @@
 <?php
 
-final class Swift_AWSTransport_Events
+final class Swift_Event_Events
 {
     /**
      * @var string
