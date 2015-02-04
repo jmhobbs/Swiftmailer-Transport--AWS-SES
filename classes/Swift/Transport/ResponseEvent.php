@@ -2,7 +2,7 @@
 
 use Symfony\Component\EventDispatcher\Event;
 
-class Swift_Event_ResponseEvent extends Event
+class Swift_Transport_ResponseEvent extends Event
 {
     protected $message;
 	protected $response;

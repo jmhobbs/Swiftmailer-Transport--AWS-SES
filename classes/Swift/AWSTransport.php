@@ -132,8 +132,8 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 			$success = (200 == $this->response->code);
 			
-			$event = new Swift_AWSTransport_ResponseEvent( $message, $this->response->xml );
-			$this->awsDispatcher->dispatch(  Swift_AWSTransport_Events::RESPONSE_RECEIVED, $event);
+			$event = new Swift_Transport_ResponseEvent( $message, $this->response->xml );
+			$this->awsDispatcher->dispatch(  Swift_Transport_Events::RESPONSE_RECEIVED, $event);
 
 			if ($evt)
 			{
