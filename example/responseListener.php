@@ -12,11 +12,12 @@
 	$transport = Swift_AWSTransport::newInstance( AWSAccessKeyId, AWSSecretKey );
 	$transport->setEndpoint( AWSSESEndpoint );
 	$transport->setDebug( true ); // Print the response from AWS to the error log for debugging.
-	$transport->registerPlugin(
-		new Swift_Events_ResponseReceivedListener( function ( $message, $body ) {
-			echo sprintf( "Message \"%s\" sent by SES with Message-ID %s. Now you can store it in your database to handle bounces, complaints and deliveries.\n", $message->getSubject(), $body->SendRawEmailResult->MessageId );
-		})
-	);
+  $transport->getAwsDispatcher()->addListener(
+    Swift_Transport_Events::RESPONSE_RECEIVED,
+    function( $event ) {
+      echo sprintf( "Message sent to AWS with id %s\n", $event->getResponse()->SendRawEmailResult->MessageId );
+    }
+  );
 	
 	//Create the Mailer using your created Transport
 	$mailer = Swift_Mailer::newInstance( $transport );
