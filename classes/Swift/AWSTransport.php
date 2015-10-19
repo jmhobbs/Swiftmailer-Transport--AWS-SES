@@ -170,10 +170,10 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 			$host = parse_url( $this->endpoint, PHP_URL_HOST );
 			$path = parse_url( $this->endpoint, PHP_URL_PATH );
 
-			$fp = fsockopen( 'ssl://' . $host , 443, $errno, $errstr, 30 );
+			$fp = @fsockopen( 'ssl://' . $host , 443, $errno, $errstr, 30 );
 
 			if( ! $fp ) {
-				throw new AWSConnectionError( "$errstr ($errno)" );
+				throw new AWSConnectionError( "$host: $errstr ($errno)" );
 			}
 
 			$socket = new ChunkedTransferSocket( $fp, $host, $path );
