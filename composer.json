@@ -11,8 +11,8 @@
 		}
 	],
 	"require": {
-        "php": ">=5.2.0",
-        	"swiftmailer/swiftmailer": ">=4.0.0"
+		"php": ">=5.2.0",
+		"swiftmailer/swiftmailer": ">=4.0.0"
 	},
 	"autoload": {
 		"psr-0": { "": "classes/" }
