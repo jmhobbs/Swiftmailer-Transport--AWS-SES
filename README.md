@@ -8,7 +8,11 @@ There is, however, a [persistent-connections](https://github.com/jmhobbs/Swiftma
 
 # Where do I put it?
 
-Whereever you want, so long as you include it in your code.
+The best way to use it is through [composer](https://getcomposer.org/).
+
+    $ composer require jmhobbs/swiftmailer-transport-aws-ses
+
+Which will bring in Swiftmailer if you don't already have it installed.
 
 Otherwise Swift can autoload it if you put the files in this directory:
 
