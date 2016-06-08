@@ -4,6 +4,8 @@ It's a simple transport for use with Swiftmailer to send mail over AWS SES.
 
 As on December 2011, Amazon [provides an SMTP interface to SES](http://aws.amazon.com/ses/faqs/#21), so you may prefer to use Swiftmailer's built in SMTP transport.
 
+There is, however, a [persistent-connections](https://github.com/jmhobbs/Swiftmailer-Transport--AWS-SES/tree/feature/persistent-connections) branch which might get you faster overall throughput than SMTP.  This isn't merged into master yet, so you'll need to tweak your composer.json to install it.  You can find that change, and keep track of progress on [PR #26](https://github.com/jmhobbs/Swiftmailer-Transport--AWS-SES/pull/26).
+
 # Where do I put it?
 
 Whereever you want, so long as you include it in your code.
