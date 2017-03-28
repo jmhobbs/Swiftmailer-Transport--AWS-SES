@@ -119,9 +119,10 @@
 			$this->_debug($this->response->body);
 			$this->_debug("=== End AWS Response ===");
 
+			/** @var bool $success */
 			$success = (200 == $this->response->code);
 			
-			if ($respEvent = $this->_eventDispatcher->createResponseEvent($this, new Swift_Response_AWSResponse( $message, $this->response->xml ), $success))
+			if ($respEvent = $this->_eventDispatcher->createResponseEvent($this, new Swift_Response_AWSResponse( $message, $this->response->xml, $success ), $success))
 				$this->_eventDispatcher->dispatchEvent($respEvent, 'responseReceived');
 
 			if ($evt)
@@ -302,10 +303,29 @@
 	 */
 	class AWSResponse {
 
+		/**
+		 * @var array
+		 */
 		public $headers = array();
+
+		/**
+		 * @var int
+		 */
 		public $code = 0;
+
+		/**
+		 * @var string
+		 */
 		public $message = '';
+
+		/**
+		 * @var string
+		 */
 		public $body = '';
+
+		/**
+		 * @var null|SimpleXMLElement
+		 */
 		public $xml = null;
 
 		const STATE_EMPTY = 0;
