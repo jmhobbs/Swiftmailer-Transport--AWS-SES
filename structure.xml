@@ -1,0 +1,1068 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project title="API Documentation" version="v2.8.5">
+  <partials/>
+  <file path="AWSInputByteStream.php" generated-path="AWSInputByteStream.html" hash="d05958618219ce120e55d6c77c7b1f8a" package="Default">
+    <docblock line="0">
+      <description></description>
+      <long-description></long-description>
+      <tag name="package" line="0" description="Default"/>
+    </docblock>
+    <class final="false" abstract="false" namespace="" line="3" package="Default">
+      <extends/>
+      <implements>\Swift_InputByteStream</implements>
+      <name>Swift_AWSInputByteStream</name>
+      <full_name>\Swift_AWSInputByteStream</full_name>
+      <docblock line="3">
+        <description></description>
+        <long-description></long-description>
+        <tag name="package" line="3" description="Default"/>
+      </docblock>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="5" package="Default">
+        <name>__construct</name>
+        <full_name>\Swift_AWSInputByteStream::__construct()</full_name>
+        <docblock line="5">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$socket</name>
+          <default></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="24" package="Default">
+        <name>write</name>
+        <full_name>\Swift_AWSInputByteStream::write()</full_name>
+        <docblock line="24">
+          <description>Writes $bytes to the end of the stream.</description>
+          <long-description>Writing may not happen immediately if the stream chooses to buffer.  If
+you want to write these bytes with immediate effect, call \commit()
+after calling write().
+
+This method returns the sequence ID of the write (i.e. 1 for first, 2 for
+second, etc etc).</long-description>
+          <tag name="param" line="24" description="" type="string" variable="$bytes">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="24" description="" type="integer">
+            <type>integer</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$bytes</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="60" package="Default">
+        <name>commit</name>
+        <full_name>\Swift_AWSInputByteStream::commit()</full_name>
+        <docblock line="60">
+          <description>For any bytes that are currently buffered inside the stream, force them
+off the buffer.</description>
+          <long-description></long-description>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="64" package="Default">
+        <name>flushBuffers</name>
+        <full_name>\Swift_AWSInputByteStream::flushBuffers()</full_name>
+        <docblock line="64">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="78" package="Default">
+        <name>bind</name>
+        <full_name>\Swift_AWSInputByteStream::bind()</full_name>
+        <docblock line="78">
+          <description>Attach $is to this stream.</description>
+          <long-description>The stream acts as an observer, receiving all data that is written.
+All \write() and \flushBuffers() operations will be mirrored.</long-description>
+          <tag name="param" line="78" description="" type="\Swift_InputByteStream" variable="$is">
+            <type>\Swift_InputByteStream</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$is</name>
+          <default></default>
+          <type>\Swift_InputByteStream</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="88" package="Default">
+        <name>unbind</name>
+        <full_name>\Swift_AWSInputByteStream::unbind()</full_name>
+        <docblock line="88">
+          <description>Remove an already bound stream.</description>
+          <long-description>If $is is not bound, no errors will be raised.
+If the stream currently has any buffered data it will be written to $is
+before unbinding occurs.</long-description>
+          <tag name="param" line="88" description="" type="\Swift_InputByteStream" variable="$is">
+            <type>\Swift_InputByteStream</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$is</name>
+          <default></default>
+          <type>\Swift_InputByteStream</type>
+        </argument>
+      </method>
+    </class>
+    <parse_markers>
+      <error line="0" code="PPC:ERR-50000">No summary was found for this file</error>
+      <error line="3" code="PPC:ERR-50005">No summary for class \Swift_AWSInputByteStream</error>
+      <error line="5" code="PPC:ERR-50015">Argument $socket is missing from the Docblock of __construct</error>
+      <error line="5" code="PPC:ERR-50008">No summary for method __construct()</error>
+      <error line="64" code="PPC:ERR-50008">No summary for method flushBuffers()</error>
+    </parse_markers>
+    <source>eJytVU1v2zAMPbu/gocAjVsn7T6wS5euLYYBvWzDOqDHQJbpWagtuZLcICvy30dJVuK4zXYZkDopRT49ko/0x09t1R4dJbxmxsDdSpR2eX1/dyvbzt6sLd5ZjawB0bQ1Niht9Bk7PBNG0nZ5LTiUneRWKAnLJVfSWN1xO4WJUfwBLaTkmyTJxFbCzC574yIeXwzO8q4sUdPZ8fHQzFUnrbefO/PG3Xx2ckJPOIF7LSwamORr92UV2AoBZQGq9D+Npzv3zrsIIX9Bw9YglYWKtS1KyrjBQjCL9RrEMBZ4pZQJ4IHhHOC2DGBr1cGKSesOV46KCzQIgc5K2GoHDEjB3GbAWV3D81Ut5ANw1TTCTtNNwGOly9Q5OIoecZoO2f+kkkCDtlIFaLSdliZwxccOJUe4/RxTD3ymYo5zeAOl0lAKbej+t+6fAGeQOlZkgJa7v72rrlqmKX2qguMSKtyfhJtBSOsNZ69oIXAPUWmQSzLJa2q6a/5ew+c9+MXOZ2nEbyRHurxGSWIKkWlwoURVgQWd58zgh/fLYBi6eT+DNmf+Qq+cZFWJmrxMlxMuefc4GczekEwXC1Le4jgKNjk9jQA+OBGlE3UPebmAIdMY80LKwekCwmlfN0Lek3bA3/jn4eS2tD1kBufZjs5JSCHUx0/IiC6cO46BxpjjGHiE2mPSA2uS9vOrGP3Ihqs7SQgvujFcALPLoA/oXH/75sXM0xgScbYHwfyXKu4vhy+keSbX/TTaillgGoF3WtNqo0EP9AlZSCMKHEx95maEe0sTwFQZxqrfAQeFHyc6FOrsDL5++w4zuBNuOldI++YJgdHwPnbCXd0yvxEJnpKF6btZGJnM+XImj22PSNRzYTXTol7PY6rjy8u6M9WNZ2giBSeE7RzttS2Nuhi29HCDxsM2wkqHUhmBlUIKU92HffayUdfWMl7BRPQrnL6Hi5u23nYbM07vJEYfCSo3qJ9QZ1RMjuLJrSm3WgtmWeg24bg0LMoe6Hq3efvluiGkItr2y7cB1aJmrrBul1NojtAIrRX17ZVN+fqbkpI6qJVcyGJ6MCx93q/SD2yU046kLMmnIP2S8ov9Ut2Wvoz0cS8375DRT0BHe5eGZsLEJFzM8H23HY/K13kwJr6yJMWI0hfXNS2mSWaaHIROuuRcSxQnRPNf6hVA/1GxzdEfIgqycw==</source>
+  </file>
+  <file path="AWSTransport.php" generated-path="AWSTransport.html" hash="05d9168d4e447a189fd97ecc2a5d27a7" package="Default">
+    <docblock line="0">
+      <description></description>
+      <long-description></long-description>
+      <tag name="package" line="0" description="Default"/>
+    </docblock>
+    <class final="false" abstract="false" namespace="" line="16" package="Swift\Transport">
+      <extends>\Swift_Transport_AWSTransport</extends>
+      <name>Swift_AWSTransport</name>
+      <full_name>\Swift_AWSTransport</full_name>
+      <docblock line="16">
+        <description>Sends Messages over AWS.</description>
+        <long-description></long-description>
+        <tag name="package" line="16" description="Swift"/>
+        <tag name="subpackage" line="16" description="Transport"/>
+        <tag name="author" line="16" description="John Hobbs"/>
+        <tag name="inherited_from" description="\Swift_Transport_AWSTransport" refers="\Swift_Transport_AWSTransport" link="/classes/Swift_Transport_AWSTransport.html"/>
+      </docblock>
+      <property static="false" visibility="private" namespace="" line="19" package="Swift\Transport">
+        <name>$AWSAccessKeyId</name>
+        <full_name>\Swift_AWSTransport::AWSAccessKeyId</full_name>
+        <default></default>
+        <docblock line="19">
+          <description>the service access key</description>
+          <long-description></long-description>
+        </docblock>
+      </property>
+      <property static="false" visibility="private" namespace="" line="21" package="Swift\Transport">
+        <name>$AWSSecretKey</name>
+        <full_name>\Swift_AWSTransport::AWSSecretKey</full_name>
+        <default></default>
+        <docblock line="21">
+          <description>the service secret key</description>
+          <long-description></long-description>
+        </docblock>
+      </property>
+      <property static="false" visibility="private" namespace="" line="23" package="Swift\Transport">
+        <name>$endpoint</name>
+        <full_name>\Swift_AWSTransport::endpoint</full_name>
+        <default></default>
+        <docblock line="23">
+          <description>the service endpoint</description>
+          <long-description></long-description>
+        </docblock>
+      </property>
+      <property static="false" visibility="private" namespace="" line="33" package="Swift\Transport">
+        <name>$debug</name>
+        <full_name>\Swift_AWSTransport::debug</full_name>
+        <default></default>
+        <docblock line="33">
+          <description>Debugging helper.</description>
+          <long-description>If false, no debugging will be done.
+If true, debugging will be done with error_log.
+Otherwise, this should be a callable, and will recieve the debug message as the first argument.</long-description>
+          <tag name="seealso" line="33" description="Swift_AWSTransport::setDebug()"/>
+        </docblock>
+      </property>
+      <property static="false" visibility="private" namespace="" line="35" package="Swift\Transport">
+        <name>$response</name>
+        <full_name>\Swift_AWSTransport::response</full_name>
+        <default></default>
+        <docblock line="35">
+          <description>the response</description>
+          <long-description></long-description>
+        </docblock>
+      </property>
+      <property static="false" visibility="protected" namespace="" line="18" package="Swift">
+        <name>$_eventDispatcher</name>
+        <full_name>\Swift_Transport_AWSTransport::_eventDispatcher</full_name>
+        <default></default>
+        <docblock line="18">
+          <description>The event dispatcher from the plugin API</description>
+          <long-description></long-description>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="44" package="Swift\Transport">
+        <name>__construct</name>
+        <full_name>\Swift_AWSTransport::__construct()</full_name>
+        <docblock line="44">
+          <description>Create a new AWSTransport.</description>
+          <long-description></long-description>
+          <tag name="param" line="44" description="&lt;p&gt;Your access key.&lt;/p&gt;" type="string" variable="$AWSAccessKeyId">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="44" description="&lt;p&gt;Your secret key.&lt;/p&gt;" type="string" variable="$AWSSecretKey">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="44" description="&lt;p&gt;Set to true to enable debug messages in error log.&lt;/p&gt;" type="boolean" variable="$debug">
+            <type>boolean</type>
+          </tag>
+          <tag name="param" line="44" description="&lt;p&gt;The AWS endpoint to use.&lt;/p&gt;" type="string" variable="$endpoint">
+            <type>string</type>
+          </tag>
+          <tag name="inherited_from" description="\Swift_Transport_AWSTransport::__construct()" refers="\Swift_Transport_AWSTransport::__construct()" link="/classes/Swift_Transport_AWSTransport.html#method___construct"/>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$AWSAccessKeyId</name>
+          <default>null</default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$AWSSecretKey</name>
+          <default>null</default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$debug</name>
+          <default>false</default>
+          <type>boolean</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$endpoint</name>
+          <default>'https://email.us-east-1.amazonaws.com/'</default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="" line="62" package="Swift\Transport">
+        <name>newInstance</name>
+        <full_name>\Swift_AWSTransport::newInstance()</full_name>
+        <docblock line="62">
+          <description>Create a new AWSTransport.</description>
+          <long-description></long-description>
+          <tag name="param" line="62" description="&lt;p&gt;Your access key.&lt;/p&gt;" type="string" variable="$AWSAccessKeyId">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="62" description="&lt;p&gt;Your secret key.&lt;/p&gt;" type="string" variable="$AWSSecretKey">
+            <type>string</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$AWSAccessKeyId</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$AWSSecretKey</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="66" package="Swift\Transport">
+        <name>setAccessKeyId</name>
+        <full_name>\Swift_AWSTransport::setAccessKeyId()</full_name>
+        <docblock line="66">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$val</name>
+          <default></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="70" package="Swift\Transport">
+        <name>setSecretKey</name>
+        <full_name>\Swift_AWSTransport::setSecretKey()</full_name>
+        <docblock line="70">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$val</name>
+          <default></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="74" package="Swift\Transport">
+        <name>setDebug</name>
+        <full_name>\Swift_AWSTransport::setDebug()</full_name>
+        <docblock line="74">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$val</name>
+          <default></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="78" package="Swift\Transport">
+        <name>setEndpoint</name>
+        <full_name>\Swift_AWSTransport::setEndpoint()</full_name>
+        <docblock line="78">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$val</name>
+          <default></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="82" package="Swift\Transport">
+        <name>getResponse</name>
+        <full_name>\Swift_AWSTransport::getResponse()</full_name>
+        <docblock line="82">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="" line="86" package="Swift\Transport">
+        <name>_debug</name>
+        <full_name>\Swift_AWSTransport::_debug()</full_name>
+        <docblock line="86">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$message</name>
+          <default></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="105" package="Swift\Transport">
+        <name>send</name>
+        <full_name>\Swift_AWSTransport::send()</full_name>
+        <docblock line="105">
+          <description>Send the given Message.</description>
+          <long-description>Recipient/sender data will be retreived from the Message API.
+The return value is the number of recipients who were accepted for delivery.</long-description>
+          <tag name="param" line="105" description="" type="\Swift_Mime_Message" variable="$message">
+            <type>\Swift_Mime_Message</type>
+          </tag>
+          <tag name="param" line="105" description="&lt;p&gt;&amp;$failedRecipients to collect failures by-reference&lt;/p&gt;" type="array&lt;mixed,string&gt;" variable="">
+            <type>array&lt;mixed,string&gt;</type>
+          </tag>
+          <tag name="return" line="105" description="" type="integer">
+            <type>integer</type>
+          </tag>
+          <tag name="throws" line="105" description="" type="\AWSConnectionError">
+            <type>\AWSConnectionError</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$message</name>
+          <default></default>
+          <type>\Swift_Mime_Message</type>
+        </argument>
+        <argument line="0" by_reference="true">
+          <name>$failedRecipients</name>
+          <default>null</default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="" line="149" package="Swift\Transport">
+        <name>_doSend</name>
+        <full_name>\Swift_AWSTransport::_doSend()</full_name>
+        <docblock line="149">
+          <description>do send through the API</description>
+          <long-description></long-description>
+          <tag name="param" line="149" description="" type="\Swift_Mime_Message" variable="$message">
+            <type>\Swift_Mime_Message</type>
+          </tag>
+          <tag name="param" line="149" description="&lt;p&gt;&amp;$failedRecipients to collect failures by-reference&lt;/p&gt;" type="array&lt;mixed,string&gt;" variable="">
+            <type>array&lt;mixed,string&gt;</type>
+          </tag>
+          <tag name="return" line="149" description="" type="\AWSResponse">
+            <type>\AWSResponse</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$message</name>
+          <default></default>
+          <type>\Swift_Mime_Message</type>
+        </argument>
+        <argument line="0" by_reference="true">
+          <name>$failedRecipients</name>
+          <default>null</default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="" line="191" package="Swift\Transport">
+        <name>calculate_RFC2104HMAC</name>
+        <full_name>\Swift_AWSTransport::calculate_RFC2104HMAC()</full_name>
+        <docblock line="191">
+          <description>Cribbed from php-aws - Thanks!
+https://github.com/tylerhall/php-aws/blob/master/class.awis.php
+(c) Tyler Hall
+MIT License</description>
+          <long-description></long-description>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$data</name>
+          <default></default>
+          <type/>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$key</name>
+          <default></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="200" package="Swift\Transport">
+        <name>isStarted</name>
+        <full_name>\Swift_AWSTransport::isStarted()</full_name>
+        <docblock line="200">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="201" package="Swift\Transport">
+        <name>start</name>
+        <full_name>\Swift_AWSTransport::start()</full_name>
+        <docblock line="201">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="202" package="Swift\Transport">
+        <name>stop</name>
+        <full_name>\Swift_AWSTransport::stop()</full_name>
+        <docblock line="202">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="209" package="Swift\Transport">
+        <name>registerPlugin</name>
+        <full_name>\Swift_AWSTransport::registerPlugin()</full_name>
+        <docblock line="209">
+          <description>Register a plugin.</description>
+          <long-description></long-description>
+          <tag name="param" line="209" description="" type="\Swift_Events_EventListener" variable="$plugin">
+            <type>\Swift_Events_EventListener</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$plugin</name>
+          <default></default>
+          <type>\Swift_Events_EventListener</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="23" package="Swift">
+        <name>__construct</name>
+        <full_name>\Swift_Transport_AWSTransport::__construct()</full_name>
+        <docblock line="23">
+          <description>Constructor.</description>
+          <long-description></long-description>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$eventDispatcher</name>
+          <default></default>
+          <type>\Swift_Events_EventDispatcher</type>
+        </argument>
+        <inherited_from>\Swift_Transport_AWSTransport</inherited_from>
+      </method>
+    </class>
+    <class final="false" abstract="false" namespace="" line="220" package="Default">
+      <extends/>
+      <name>ChunkedTransferSocket</name>
+      <full_name>\ChunkedTransferSocket</full_name>
+      <docblock line="220">
+        <description>Convenience methods to use a socket for chunked transfer in HTTP</description>
+        <long-description></long-description>
+        <tag name="package" line="220" description="Default"/>
+      </docblock>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="228" package="Default">
+        <name>__construct</name>
+        <full_name>\ChunkedTransferSocket::__construct()</full_name>
+        <docblock line="228">
+          <description></description>
+          <long-description></long-description>
+          <tag name="param" line="228" description="" type="" variable="$socket"/>
+          <tag name="param" line="228" description="" type="" variable="$host"/>
+          <tag name="param" line="228" description="" type="" variable="$path"/>
+          <tag name="param" line="228" description="" type="" variable="$method"/>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$socket</name>
+          <default></default>
+          <type/>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$host</name>
+          <default></default>
+          <type/>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$path</name>
+          <default></default>
+          <type/>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$method</name>
+          <default>"POST"</default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="251" package="Default">
+        <name>header</name>
+        <full_name>\ChunkedTransferSocket::header()</full_name>
+        <docblock line="251">
+          <description>Add an HTTP header</description>
+          <long-description></long-description>
+          <tag name="param" line="251" description="" type="" variable="$header"/>
+          <tag name="param" line="251" description="" type="" variable="$value"/>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$header</name>
+          <default></default>
+          <type/>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$value</name>
+          <default></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="261" package="Default">
+        <name>write</name>
+        <full_name>\ChunkedTransferSocket::write()</full_name>
+        <docblock line="261">
+          <description>Write a chunk of data</description>
+          <long-description></long-description>
+          <tag name="param" line="261" description="" type="" variable="$chunk"/>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$chunk</name>
+          <default></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="277" package="Default">
+        <name>finishWrite</name>
+        <full_name>\ChunkedTransferSocket::finishWrite()</full_name>
+        <docblock line="277">
+          <description>Finish writing chunks and get ready to read.</description>
+          <long-description></long-description>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="285" package="Default">
+        <name>read</name>
+        <full_name>\ChunkedTransferSocket::read()</full_name>
+        <docblock line="285">
+          <description>Read the socket for a response</description>
+          <long-description></long-description>
+        </docblock>
+      </method>
+    </class>
+    <class final="false" abstract="false" namespace="" line="304" package="Default">
+      <extends/>
+      <name>AWSResponse</name>
+      <full_name>\AWSResponse</full_name>
+      <docblock line="304">
+        <description>A wrapper to parse an AWS HTTP response</description>
+        <long-description></long-description>
+        <tag name="package" line="304" description="Default"/>
+      </docblock>
+      <constant namespace="" line="331" package="Default">
+        <name>STATE_EMPTY</name>
+        <full_name>\AWSResponse::STATE_EMPTY</full_name>
+        <value>0</value>
+        <docblock line="331">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+      </constant>
+      <constant namespace="" line="332" package="Default">
+        <name>STATE_HEADERS</name>
+        <full_name>\AWSResponse::STATE_HEADERS</full_name>
+        <value>1</value>
+        <docblock line="332">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+      </constant>
+      <constant namespace="" line="333" package="Default">
+        <name>STATE_BODY</name>
+        <full_name>\AWSResponse::STATE_BODY</full_name>
+        <value>2</value>
+        <docblock line="333">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+      </constant>
+      <property static="false" visibility="public" namespace="" line="309" package="Default">
+        <name>$headers</name>
+        <full_name>\AWSResponse::headers</full_name>
+        <default>array()</default>
+        <docblock line="309">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="309" description="" type="array" variable="">
+            <type>array</type>
+          </tag>
+        </docblock>
+      </property>
+      <property static="false" visibility="public" namespace="" line="314" package="Default">
+        <name>$code</name>
+        <full_name>\AWSResponse::code</full_name>
+        <default>0</default>
+        <docblock line="314">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="314" description="" type="integer" variable="">
+            <type>integer</type>
+          </tag>
+        </docblock>
+      </property>
+      <property static="false" visibility="public" namespace="" line="319" package="Default">
+        <name>$message</name>
+        <full_name>\AWSResponse::message</full_name>
+        <default>''</default>
+        <docblock line="319">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="319" description="" type="string" variable="">
+            <type>string</type>
+          </tag>
+        </docblock>
+      </property>
+      <property static="false" visibility="public" namespace="" line="324" package="Default">
+        <name>$body</name>
+        <full_name>\AWSResponse::body</full_name>
+        <default>''</default>
+        <docblock line="324">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="324" description="" type="string" variable="">
+            <type>string</type>
+          </tag>
+        </docblock>
+      </property>
+      <property static="false" visibility="public" namespace="" line="329" package="Default">
+        <name>$xml</name>
+        <full_name>\AWSResponse::xml</full_name>
+        <default>null</default>
+        <docblock line="329">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="329" description="" type="null|\SimpleXMLElement" variable="">
+            <type>null</type>
+            <type>\SimpleXMLElement</type>
+          </tag>
+        </docblock>
+      </property>
+      <property static="false" visibility="protected" namespace="" line="335" package="Default">
+        <name>$state</name>
+        <full_name>\AWSResponse::state</full_name>
+        <default>self::STATE_EMPTY</default>
+        <docblock line="335">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="337" package="Default">
+        <name>line</name>
+        <full_name>\AWSResponse::line()</full_name>
+        <docblock line="337">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$line</name>
+          <default></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="367" package="Default">
+        <name>complete</name>
+        <full_name>\AWSResponse::complete()</full_name>
+        <docblock line="367">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+      </method>
+    </class>
+    <class final="false" abstract="false" namespace="" line="373" package="Default">
+      <extends>\Exception</extends>
+      <name>AWSConnectionError</name>
+      <full_name>\AWSConnectionError</full_name>
+      <docblock line="373">
+        <description></description>
+        <long-description></long-description>
+        <tag name="package" line="373" description="Default"/>
+      </docblock>
+    </class>
+    <class final="false" abstract="false" namespace="" line="374" package="Default">
+      <extends>\Exception</extends>
+      <name>InvalidOperationException</name>
+      <full_name>\InvalidOperationException</full_name>
+      <docblock line="374">
+        <description></description>
+        <long-description></long-description>
+        <tag name="package" line="374" description="Default"/>
+      </docblock>
+    </class>
+    <class final="false" abstract="false" namespace="" line="375" package="Default">
+      <extends>\Exception</extends>
+      <name>InvalidHeaderException</name>
+      <full_name>\InvalidHeaderException</full_name>
+      <docblock line="375">
+        <description></description>
+        <long-description></long-description>
+        <tag name="package" line="375" description="Default"/>
+      </docblock>
+    </class>
+    <class final="false" abstract="false" namespace="" line="376" package="Default">
+      <extends>\Exception</extends>
+      <name>AWSEmptyResponseException</name>
+      <full_name>\AWSEmptyResponseException</full_name>
+      <docblock line="376">
+        <description></description>
+        <long-description></long-description>
+        <tag name="package" line="376" description="Default"/>
+      </docblock>
+    </class>
+    <parse_markers>
+      <error line="0" code="PPC:ERR-50000">No summary was found for this file</error>
+      <error line="373" code="PPC:ERR-50005">No summary for class \AWSConnectionError</error>
+      <error line="374" code="PPC:ERR-50005">No summary for class \InvalidOperationException</error>
+      <error line="375" code="PPC:ERR-50005">No summary for class \InvalidHeaderException</error>
+      <error line="376" code="PPC:ERR-50005">No summary for class \AWSEmptyResponseException</error>
+      <error line="66" code="PPC:ERR-50015">Argument $val is missing from the Docblock of setAccessKeyId</error>
+      <error line="66" code="PPC:ERR-50008">No summary for method setAccessKeyId()</error>
+      <error line="70" code="PPC:ERR-50015">Argument $val is missing from the Docblock of setSecretKey</error>
+      <error line="70" code="PPC:ERR-50008">No summary for method setSecretKey()</error>
+      <error line="74" code="PPC:ERR-50015">Argument $val is missing from the Docblock of setDebug</error>
+      <error line="74" code="PPC:ERR-50008">No summary for method setDebug()</error>
+      <error line="78" code="PPC:ERR-50015">Argument $val is missing from the Docblock of setEndpoint</error>
+      <error line="78" code="PPC:ERR-50008">No summary for method setEndpoint()</error>
+      <error line="82" code="PPC:ERR-50008">No summary for method getResponse()</error>
+      <error line="86" code="PPC:ERR-50015">Argument $message is missing from the Docblock of _debug</error>
+      <error line="86" code="PPC:ERR-50008">No summary for method _debug()</error>
+      <error line="191" code="PPC:ERR-50015">Argument $data is missing from the Docblock of calculate_RFC2104HMAC</error>
+      <error line="191" code="PPC:ERR-50015">Argument $key is missing from the Docblock of calculate_RFC2104HMAC</error>
+      <error line="200" code="PPC:ERR-50008">No summary for method isStarted()</error>
+      <error line="201" code="PPC:ERR-50008">No summary for method start()</error>
+      <error line="202" code="PPC:ERR-50008">No summary for method stop()</error>
+      <error line="228" code="PPC:ERR-50008">No summary for method __construct()</error>
+      <error line="337" code="PPC:ERR-50015">Argument $line is missing from the Docblock of line</error>
+      <error line="337" code="PPC:ERR-50008">No summary for method line()</error>
+      <error line="367" code="PPC:ERR-50008">No summary for method complete()</error>
+      <error line="309" code="PPC:ERR-50007">No summary for property $headers</error>
+      <error line="314" code="PPC:ERR-50007">No summary for property $code</error>
+      <error line="319" code="PPC:ERR-50007">No summary for property $message</error>
+      <error line="324" code="PPC:ERR-50007">No summary for property $body</error>
+      <error line="329" code="PPC:ERR-50007">No summary for property $xml</error>
+      <error line="335" code="PPC:ERR-50007">No summary for property $state</error>
+    </parse_markers>
+    <source>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</source>
+  </file>
+  <file path="Events/ResponseReceivedListener.php" generated-path="Events.ResponseReceivedListener.html" hash="a942d21379edc78710215b372b9fb05f" package="Default">
+    <docblock line="0">
+      <description></description>
+      <long-description></long-description>
+      <tag name="package" line="0" description="Default"/>
+    </docblock>
+    <class final="false" abstract="false" namespace="" line="3" package="Default">
+      <extends/>
+      <implements>\Swift_Events_ResponseListener</implements>
+      <name>Swift_Events_ResponseReceivedListener</name>
+      <full_name>\Swift_Events_ResponseReceivedListener</full_name>
+      <docblock line="3">
+        <description></description>
+        <long-description></long-description>
+        <tag name="package" line="3" description="Default"/>
+      </docblock>
+      <property static="false" visibility="private" namespace="" line="6" package="Default">
+        <name>$callback</name>
+        <full_name>\Swift_Events_ResponseReceivedListener::callback</full_name>
+        <default></default>
+        <docblock line="6">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="8" package="Default">
+        <name>__construct</name>
+        <full_name>\Swift_Events_ResponseReceivedListener::__construct()</full_name>
+        <docblock line="8">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$callback</name>
+          <default></default>
+          <type>callable</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="13" package="Default">
+        <name>responseReceived</name>
+        <full_name>\Swift_Events_ResponseReceivedListener::responseReceived()</full_name>
+        <docblock line="13">
+          <description></description>
+          <long-description></long-description>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$event</name>
+          <default></default>
+          <type>\Swift_Events_ResponseEvent</type>
+        </argument>
+      </method>
+    </class>
+    <parse_markers>
+      <error line="0" code="PPC:ERR-50000">No summary was found for this file</error>
+      <error line="3" code="PPC:ERR-50005">No summary for class \Swift_Events_ResponseReceivedListener</error>
+      <error line="8" code="PPC:ERR-50015">Argument $callback is missing from the Docblock of __construct</error>
+      <error line="8" code="PPC:ERR-50008">No summary for method __construct()</error>
+      <error line="13" code="PPC:ERR-50015">Argument $event is missing from the Docblock of responseReceived</error>
+      <error line="13" code="PPC:ERR-50008">No summary for method responseReceived()</error>
+      <error line="6" code="PPC:ERR-50007">No summary for property $callback</error>
+    </parse_markers>
+    <source>eJx9T0sKwjAQXSenmEUXKegJ/IHgTjd1K5Q0nWowpqEzrYh4d2tRaaW4Gt7M+8ybr8IpSGmcJoL91Racbhr0TGmCFEpPmKBB22C+tcTosZLCXoLDy4s0rvgy71KEyjaaESKjncu0Oc+kaLd15qyBovaGbekhTU0r5Ko2rODF1JnraSCWovUSEZ8sTZff9WJg+xhzrn5aKDiM/txBiLAbn7h+0DB61j+rt266PCJ/DFXcwR0S6WOLJn9I6zK/qRjiroR8PAEtq4ll</source>
+  </file>
+  <file path="Response/AWSResponse.php" generated-path="Response.AWSResponse.html" hash="a5676b7ff7bb85ed7720884d863bb269" package="Default">
+    <docblock line="0">
+      <description></description>
+      <long-description></long-description>
+      <tag name="package" line="0" description="Default"/>
+    </docblock>
+    <class final="false" abstract="false" namespace="" line="3" package="Default">
+      <extends/>
+      <name>Swift_Response_AWSResponse</name>
+      <full_name>\Swift_Response_AWSResponse</full_name>
+      <docblock line="3">
+        <description></description>
+        <long-description></long-description>
+        <tag name="package" line="3" description="Default"/>
+      </docblock>
+      <property static="false" visibility="protected" namespace="" line="7" package="Default">
+        <name>$message</name>
+        <full_name>\Swift_Response_AWSResponse::message</full_name>
+        <default></default>
+        <docblock line="7">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="7" description="" type="\Swift_Mime_Message" variable="">
+            <type>\Swift_Mime_Message</type>
+          </tag>
+        </docblock>
+      </property>
+      <property static="false" visibility="protected" namespace="" line="12" package="Default">
+        <name>$body</name>
+        <full_name>\Swift_Response_AWSResponse::body</full_name>
+        <default></default>
+        <docblock line="12">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="12" description="" type="null|\SimpleXMLElement" variable="">
+            <type>null</type>
+            <type>\SimpleXMLElement</type>
+          </tag>
+        </docblock>
+      </property>
+      <property static="false" visibility="protected" namespace="" line="17" package="Default">
+        <name>$success</name>
+        <full_name>\Swift_Response_AWSResponse::success</full_name>
+        <default></default>
+        <docblock line="17">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="17" description="" type="boolean" variable="">
+            <type>boolean</type>
+          </tag>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="26" package="Default">
+        <name>__construct</name>
+        <full_name>\Swift_Response_AWSResponse::__construct()</full_name>
+        <docblock line="26">
+          <description>Swift_Response_AWSResponse constructor.</description>
+          <long-description></long-description>
+          <tag name="param" line="26" description="" type="\Swift_Mime_Message" variable="$message">
+            <type>\Swift_Mime_Message</type>
+          </tag>
+          <tag name="param" line="26" description="" type="null" variable="$body">
+            <type>null</type>
+          </tag>
+          <tag name="param" line="26" description="" type="boolean" variable="$success">
+            <type>boolean</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$message</name>
+          <default></default>
+          <type>\Swift_Mime_Message</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$body</name>
+          <default>null</default>
+          <type>null</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$success</name>
+          <default>false</default>
+          <type>boolean</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="36" package="Default">
+        <name>getMessage</name>
+        <full_name>\Swift_Response_AWSResponse::getMessage()</full_name>
+        <docblock line="36">
+          <description></description>
+          <long-description></long-description>
+          <tag name="return" line="36" description="" type="\Swift_Mime_Message">
+            <type>\Swift_Mime_Message</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="44" package="Default">
+        <name>getBody</name>
+        <full_name>\Swift_Response_AWSResponse::getBody()</full_name>
+        <docblock line="44">
+          <description></description>
+          <long-description></long-description>
+          <tag name="return" line="44" description="" type="null|\SimpleXMLElement">
+            <type>null</type>
+            <type>\SimpleXMLElement</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="52" package="Default">
+        <name>isSuccess</name>
+        <full_name>\Swift_Response_AWSResponse::isSuccess()</full_name>
+        <docblock line="52">
+          <description></description>
+          <long-description></long-description>
+          <tag name="return" line="52" description="" type="boolean">
+            <type>boolean</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="62" package="Default">
+        <name>setMessage</name>
+        <full_name>\Swift_Response_AWSResponse::setMessage()</full_name>
+        <docblock line="62">
+          <description></description>
+          <long-description></long-description>
+          <tag name="param" line="62" description="" type="" variable="$message"/>
+          <tag name="return" line="62" description="" type="\Swift_Response_AWSResponse">
+            <type>\Swift_Response_AWSResponse</type>
+          </tag>
+          <tag name="fluent" description="This method is part of a fluent interface and will return the same instance"/>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$message</name>
+          <default></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="73" package="Default">
+        <name>setBody</name>
+        <full_name>\Swift_Response_AWSResponse::setBody()</full_name>
+        <docblock line="73">
+          <description></description>
+          <long-description></long-description>
+          <tag name="param" line="73" description="" type="" variable="$body"/>
+          <tag name="return" line="73" description="" type="\Swift_Response_AWSResponse">
+            <type>\Swift_Response_AWSResponse</type>
+          </tag>
+          <tag name="fluent" description="This method is part of a fluent interface and will return the same instance"/>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$body</name>
+          <default></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="84" package="Default">
+        <name>setSuccess</name>
+        <full_name>\Swift_Response_AWSResponse::setSuccess()</full_name>
+        <docblock line="84">
+          <description></description>
+          <long-description></long-description>
+          <tag name="param" line="84" description="" type="boolean" variable="$success">
+            <type>boolean</type>
+          </tag>
+          <tag name="return" line="84" description="" type="\Swift_Response_AWSResponse">
+            <type>\Swift_Response_AWSResponse</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$success</name>
+          <default></default>
+          <type>boolean</type>
+        </argument>
+      </method>
+    </class>
+    <parse_markers>
+      <error line="0" code="PPC:ERR-50000">No summary was found for this file</error>
+      <error line="3" code="PPC:ERR-50005">No summary for class \Swift_Response_AWSResponse</error>
+      <error line="36" code="PPC:ERR-50008">No summary for method getMessage()</error>
+      <error line="44" code="PPC:ERR-50008">No summary for method getBody()</error>
+      <error line="52" code="PPC:ERR-50008">No summary for method isSuccess()</error>
+      <error line="62" code="PPC:ERR-50008">No summary for method setMessage()</error>
+      <error line="73" code="PPC:ERR-50008">No summary for method setBody()</error>
+      <error line="84" code="PPC:ERR-50008">No summary for method setSuccess()</error>
+      <error line="7" code="PPC:ERR-50007">No summary for property $message</error>
+      <error line="12" code="PPC:ERR-50007">No summary for property $body</error>
+      <error line="17" code="PPC:ERR-50007">No summary for property $success</error>
+    </parse_markers>
+    <source>eJyNU71ugzAQnu2n8JAhjdLmAfqTtlK3spSh3RA4JrFkMLJNq6rNu9dgYwwYmiVCvrvv5+7L3b46VRBilkqJ4i+aq+SNyIqXkiRP73H3jX4g2G02EKANevxMhW2NaEGSiEiZHklT20FQCa4IVuSAVoUp3MLRbFkz9hvTomLkI3p9YaQgpZqOZ/zwPZnNOGfTVlljrMn87gUvWP8qUWPFxU3Ta9CrVKRFwJfz4bc1FoxC/7UR58R0KuuMUYzyusSK8hIliaNfL7FtDTy6b7m2DlY/5CnTLq4g0EcBK3Wi8vrBTulqv3ZXtEB2o+65R+wXCM7+xgVRtSjnj+1cHYmylbXVZUeH8mbwlwLhUzxr/WF86ywE7idmdAsqY+M7DDqzFHNrPxUDvnZ4LF72+3GTF13QB50R0qXwIhXtCm20hvzjkPzPPIl7IDShP+DMNbS67hx92ocag4kNKIVn+AenkXYs</source>
+  </file>
+  <file path="Transport/AWSTransport.php" generated-path="Transport.AWSTransport.html" hash="5238f297b690071a5aef3ce9a8020420" package="Swift\Transport">
+    <docblock line="0">
+      <description>This file declare the Swist_Transport_AWSTransport class.</description>
+      <long-description></long-description>
+      <tag name="package" line="0" description="Swift"/>
+      <tag name="subpackage" line="0" description="Transport"/>
+      <tag name="author" line="0" description="Julien Muetton" link="mailto:julien_muetton@carpe-hora.com"/>
+      <tag name="copyright" line="0" description="(c) Carpe Hora SARL 2011"/>
+      <tag name="since" line="0" description="2011-10-07"/>
+    </docblock>
+    <class final="false" abstract="true" namespace="" line="15" package="Swift">
+      <extends/>
+      <implements>\Swift_Transport</implements>
+      <name>Swift_Transport_AWSTransport</name>
+      <full_name>\Swift_Transport_AWSTransport</full_name>
+      <docblock line="15">
+        <description>the base class for aws transport</description>
+        <long-description></long-description>
+        <tag name="package" line="15" description="Swift"/>
+      </docblock>
+      <property static="false" visibility="protected" namespace="" line="18" package="Swift">
+        <name>$_eventDispatcher</name>
+        <full_name>\Swift_Transport_AWSTransport::_eventDispatcher</full_name>
+        <default></default>
+        <docblock line="18">
+          <description>The event dispatcher from the plugin API</description>
+          <long-description></long-description>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="" line="23" package="Swift">
+        <name>__construct</name>
+        <full_name>\Swift_Transport_AWSTransport::__construct()</full_name>
+        <docblock line="23">
+          <description>Constructor.</description>
+          <long-description></long-description>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$eventDispatcher</name>
+          <default></default>
+          <type>\Swift_Events_EventDispatcher</type>
+        </argument>
+      </method>
+    </class>
+    <parse_markers>
+      <error line="23" code="PPC:ERR-50015">Argument $eventDispatcher is missing from the Docblock of __construct</error>
+    </parse_markers>
+    <source>eJx9Ustu2zAQPItfsQcDlg3IsnspEKdujDhFU/QRxAF6FGhqJbGVKIJc1TCK/HtXVK0ECdoTscuZ2RkuL9/byop0Phcwh4dKeyh0jZCjqqVDoAphf9Sesgcnjbeto2z7fT8WwDDvF0zu+VdWqp+yDJSCQsd3h3NzJIUL2VHVOvjU1RoNfOmQqDVw+SPUWTPUV0o6iwkD5UK1zSYwVWtPTpcVQaxmcN0j4CMjYL+9/wxvlqvVMFkbhaFMVstk+ZabqTgn7XMdpMfBPxTsRB490DOLqZAHzw31N+QQ6l/voBtbY4OGXuHEbxHxVH5cBPzFCMi1t5JUhQ4K1zbBjK27UhvY3t32kyPrWkJFmMMkC6TdyFmLoCcijnHdGrbYKWrdom/0zO5QawVFZxRpftEsU2dQPDi76fX8cDzJwuTFnJmI2Hk0If4UyealC3j3irAW0aN4hDSFm687+Pbhvx+HN5GCaY/gsGQUC+Zo0eTSKI1eiMHqLvTQqBMnJakNuouLEumWEzESYzaZbEaNeDoucMHrnA63R03VKMTisXROnp5jQ5CnrUxns7X4A1xBDGY=</source>
+  </file>
+  <package name="Default" full_name="Default"/>
+  <package name="Swift" full_name="Swift">
+    <package name="Transport" full_name="Swift\Transport"/>
+  </package>
+  <package name="global" full_name="global"/>
+  <namespace name="global" full_name="global"/>
+  <deprecated count="0"/>
+</project>

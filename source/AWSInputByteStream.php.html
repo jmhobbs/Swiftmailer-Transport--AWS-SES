@@ -1,0 +1,135 @@
+<html>
+    <head>
+        <script
+            type="text/javascript"
+            src="../js/jquery-1.4.2.min.js">
+        </script>
+        <script
+            type="text/javascript"
+            src="../syntax_highlighter/scripts/shCore.js">
+        </script>
+        <script
+            type="text/javascript"
+            src="../syntax_highlighter/scripts/shBrushJScript.js">
+        </script>
+        <script
+            type="text/javascript"
+            src="../syntax_highlighter/scripts/shBrushPhp.js">
+        </script>
+        <script
+            type="text/javascript"
+            src="../syntax_highlighter/scripts/shBrushXml.js">
+        </script>
+        <link
+            href="../syntax_highlighter/styles/shCore.css" rel="stylesheet"
+            type="text/css"
+        />
+        <link
+            href="../syntax_highlighter/styles/shCoreEclipse.css"
+            rel="stylesheet" type="text/css"
+        />
+        <link
+            href="../syntax_highlighter/styles/shThemeWordpress.css"
+            rel="stylesheet" type="text/css"
+        />
+    </head>
+    <body>
+        <pre class="brush: php">&lt;?php
+
+	class Swift_AWSInputByteStream implements Swift_InputByteStream {
+
+		public function __construct( $socket ) {
+			$this-&gt;socket = $socket;
+			$this-&gt;buffer = '';
+			$this-&gt;counter = 0;
+		}
+
+		/**
+		 * Writes $bytes to the end of the stream.
+		 *
+		 * Writing may not happen immediately if the stream chooses to buffer.  If
+		 * you want to write these bytes with immediate effect, call {@link commit()}
+		 * after calling write().
+		 *
+		 * This method returns the sequence ID of the write (i.e. 1 for first, 2 for
+		 * second, etc etc).
+		 *
+		 * @param string $bytes
+		 * @return int
+		 */
+		public function write($bytes) {
+
+			$block = $this-&gt;buffer . $bytes;
+			$block_size = strlen( $block );
+			$encoded = base64_encode( $block );
+
+			$setback = 0;
+			while( substr( $encoded, -1 ) === '=' ) {
+				++$setback;
+				if( $setback &gt;= $block_size ) {
+					$this-&gt;buffer = $block; 
+					return ++$this-&gt;counter;
+				}
+				$encoded = base64_encode( substr( $block, 0, $setback * -1 ) );
+			}
+
+			if( $setback &gt; 0 ) { 
+				$this-&gt;buffer = substr( $block, $setback * -1 );
+			}
+			else {
+				$this-&gt;buffer = '';
+			}
+
+			unset( $block );
+
+			$this-&gt;socket-&gt;write( urlencode( $encoded ) );
+
+			unset( $encoded );
+
+			return ++$this-&gt;counter;
+		}
+
+		/**
+		 * For any bytes that are currently buffered inside the stream, force them
+		 * off the buffer.
+		 */
+		public function commit() {
+			// NOP - Since we have a required packet offset (3-bytes), we can't commit arbitrarily.
+		}
+
+		public function flushBuffers() {
+			if( strlen( $this-&gt;buffer ) &gt; 0 ) {
+				$this-&gt;socket-&gt;write( urlencode( base64_encode( $this-&gt;buffer ) ) );
+			}
+			$this-&gt;socket-&gt;finishWrite();
+		}
+
+		/**
+		 * Attach $is to this stream.
+		 * The stream acts as an observer, receiving all data that is written.
+		 * All {@link write()} and {@link flushBuffers()} operations will be mirrored.
+		 *
+		 * @param Swift_InputByteStream $is
+		 */
+		public function bind(Swift_InputByteStream $is){}
+
+		/**
+		 * Remove an already bound stream.
+		 * If $is is not bound, no errors will be raised.
+		 * If the stream currently has any buffered data it will be written to $is
+		 * before unbinding occurs.
+		 *
+		 * @param Swift_InputByteStream $is
+		 */
+		public function unbind(Swift_InputByteStream $is){}
+
+}
+</pre>
+        <script type="text/javascript">
+             SyntaxHighlighter.all();
+             jQuery('.gutter div').each(function(key, data){
+                jQuery(data).prepend('<a name="L'+jQuery(data).text()+'"/>');
+             });
+        </script>
+    </body>
+</html>

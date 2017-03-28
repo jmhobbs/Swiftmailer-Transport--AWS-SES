@@ -1,0 +1,92 @@
+<?php
+
+class Swift_Response_AWSResponse {
+	/**
+	 * @var Swift_Mime_Message
+	 */
+	protected $message;
+
+	/**
+	 * @var null|SimpleXMLElement
+	 */
+	protected $body;
+
+	/**
+	 * @var bool
+	 */
+	protected $success;
+
+	/**
+	 * Swift_Response_AWSResponse constructor.
+	 *
+	 * @param Swift_Mime_Message $message
+	 * @param null $body
+	 * @param bool $success
+	 */
+	public function __construct( Swift_Mime_Message $message, $body = null, $success = false )
+	{
+		$this->message = $message;
+		$this->body = $body;
+		$this->success = $success;
+	}
+
+	/**
+	 * @return Swift_Mime_Message
+	 */
+	function getMessage()
+	{
+		return $this->message;
+	}
+
+	/**
+	 * @return null|SimpleXMLElement
+	 */
+	function getBody()
+	{
+		return $this->body;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isSuccess()
+	{
+		return $this->success;
+	}
+
+	/**
+	 * @param $message
+	 *
+	 * @return $this
+	 */
+	function setMessage( $message )
+	{
+		$this->message = $message;
+		return $this;
+	}
+
+	/**
+	 * @param $body
+	 *
+	 * @return $this
+	 */
+	function setBody( $body )
+	{
+		$this->body = $body;
+		return $this;
+	}
+
+	/**
+	 * @param bool $success
+	 *
+	 * @return Swift_Response_AWSResponse
+	 */
+	public function setSuccess( $success )
+	{
+		$this->success = $success;
+		return $this;
+	}
+
+
+}
+

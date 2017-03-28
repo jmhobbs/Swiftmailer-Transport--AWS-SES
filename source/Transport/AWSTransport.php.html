@@ -1,0 +1,78 @@
+<html>
+    <head>
+        <script
+            type="text/javascript"
+            src="../../js/jquery-1.4.2.min.js">
+        </script>
+        <script
+            type="text/javascript"
+            src="../../syntax_highlighter/scripts/shCore.js">
+        </script>
+        <script
+            type="text/javascript"
+            src="../../syntax_highlighter/scripts/shBrushJScript.js">
+        </script>
+        <script
+            type="text/javascript"
+            src="../../syntax_highlighter/scripts/shBrushPhp.js">
+        </script>
+        <script
+            type="text/javascript"
+            src="../../syntax_highlighter/scripts/shBrushXml.js">
+        </script>
+        <link
+            href="../../syntax_highlighter/styles/shCore.css" rel="stylesheet"
+            type="text/css"
+        />
+        <link
+            href="../../syntax_highlighter/styles/shCoreEclipse.css"
+            rel="stylesheet" type="text/css"
+        />
+        <link
+            href="../../syntax_highlighter/styles/shThemeWordpress.css"
+            rel="stylesheet" type="text/css"
+        />
+    </head>
+    <body>
+        <pre class="brush: php">&lt;?php
+/**
+ * This file declare the Swist_Transport_AWSTransport class.
+ *
+ * @package Swift
+ * @subpackage Transport
+ * @author Julien Muetton &lt;julien_muetton@carpe-hora.com&gt;
+ * @copyright (c) Carpe Hora SARL 2011
+ * @since 2011-10-07
+ */
+
+/**
+ * the base class for aws transport
+ */
+abstract class Swift_Transport_AWSTransport implements Swift_Transport
+{
+	/** The event dispatcher from the plugin API */
+	protected $_eventDispatcher;
+
+	/**
+	 * Constructor.
+	 */
+	public function __construct(Swift_Events_EventDispatcher $eventDispatcher)
+	{
+		$this-&gt;_eventDispatcher = $eventDispatcher;
+	}
+} // END OF Swist_Transport_AWSTransport
+
+// now register dependancies
+
+Swift_DependencyContainer::getInstance()
+	-&gt; register('transport.aws')
+	-&gt; withDependencies(array('transport.eventdispatcher'));
+</pre>
+        <script type="text/javascript">
+             SyntaxHighlighter.all();
+             jQuery('.gutter div').each(function(key, data){
+                jQuery(data).prepend('<a name="L'+jQuery(data).text()+'"/>');
+             });
+        </script>
+    </body>
+</html>

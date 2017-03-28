@@ -1,0 +1,421 @@
+<html>
+    <head>
+        <script
+            type="text/javascript"
+            src="../js/jquery-1.4.2.min.js">
+        </script>
+        <script
+            type="text/javascript"
+            src="../syntax_highlighter/scripts/shCore.js">
+        </script>
+        <script
+            type="text/javascript"
+            src="../syntax_highlighter/scripts/shBrushJScript.js">
+        </script>
+        <script
+            type="text/javascript"
+            src="../syntax_highlighter/scripts/shBrushPhp.js">
+        </script>
+        <script
+            type="text/javascript"
+            src="../syntax_highlighter/scripts/shBrushXml.js">
+        </script>
+        <link
+            href="../syntax_highlighter/styles/shCore.css" rel="stylesheet"
+            type="text/css"
+        />
+        <link
+            href="../syntax_highlighter/styles/shCoreEclipse.css"
+            rel="stylesheet" type="text/css"
+        />
+        <link
+            href="../syntax_highlighter/styles/shThemeWordpress.css"
+            rel="stylesheet" type="text/css"
+        />
+    </head>
+    <body>
+        <pre class="brush: php">&lt;?php
+	/*
+	* This file requires SwiftMailer.
+	* (c) 2011 John Hobbs
+	*
+	* For the full copyright and license information, please view the LICENSE
+	* file that was distributed with this source code.
+	*/
+
+	/**
+	* Sends Messages over AWS.
+	* @package Swift
+	* @subpackage Transport
+	* @author John Hobbs
+	*/
+	class Swift_AWSTransport extends Swift_Transport_AWSTransport {
+
+		/** the service access key */
+		private $AWSAccessKeyId;
+		/** the service secret key */
+		private $AWSSecretKey;
+		/** the service endpoint */
+		private $endpoint;
+		/**
+		 * Debugging helper.
+		 *
+		 * If false, no debugging will be done.
+		 * If true, debugging will be done with error_log.
+		 * Otherwise, this should be a callable, and will recieve the debug message as the first argument.
+		 *
+		 * @seealso Swift_AWSTransport::setDebug()
+		 */
+		private $debug;
+		/** the response */
+		private $response;
+
+		/**
+		* Create a new AWSTransport.
+		* @param string $AWSAccessKeyId Your access key.
+		* @param string $AWSSecretKey Your secret key.
+		* @param boolean $debug Set to true to enable debug messages in error log.
+		* @param string $endpoint The AWS endpoint to use.
+		*/
+		public function __construct($AWSAccessKeyId = null , $AWSSecretKey = null, $debug = false, $endpoint = 'https://email.us-east-1.amazonaws.com/') {
+			call_user_func_array(
+				array($this, 'Swift_Transport_AWSTransport::__construct'),
+				Swift_DependencyContainer::getInstance()
+					-&gt;createDependenciesFor('transport.aws')
+				);
+
+			$this-&gt;AWSAccessKeyId = $AWSAccessKeyId;
+			$this-&gt;AWSSecretKey = $AWSSecretKey;
+			$this-&gt;endpoint = $endpoint;
+			$this-&gt;debug = $debug;
+		}
+
+		/**
+		* Create a new AWSTransport.
+		* @param string $AWSAccessKeyId Your access key.
+		* @param string $AWSSecretKey Your secret key.
+		*/
+		public static function newInstance( $AWSAccessKeyId , $AWSSecretKey ) {
+			return new Swift_AWSTransport( $AWSAccessKeyId , $AWSSecretKey );
+		}
+
+		public function setAccessKeyId($val) {
+			$this-&gt;AWSAccessKeyId = $val;
+		}
+
+		public function setSecretKey($val) {
+			$this-&gt;AWSSecretKey = $val;
+		}
+
+		public function setDebug($val) {
+			$this-&gt;debug = $val;
+		}
+
+		public function setEndpoint($val) {
+			$this-&gt;endpoint = $val;
+		}
+
+		public function getResponse() {
+			return $this-&gt;response;
+		}
+
+		protected function _debug ( $message ) {
+			if ( true === $this-&gt;debug ) {
+				error_log( $message );
+			} elseif ( is_callable($this-&gt;debug) ) {
+				call_user_func( $this-&gt;debug, $message );
+			}
+		}
+
+		/**
+		* Send the given Message.
+		*
+		* Recipient/sender data will be retreived from the Message API.
+		* The return value is the number of recipients who were accepted for delivery.
+		*
+		* @param Swift_Mime_Message $message
+		* @param string[] &amp;$failedRecipients to collect failures by-reference
+		* @return int
+		* @throws AWSConnectionError
+		*/
+		public function send( Swift_Mime_Message $message, &amp;$failedRecipients = null ) {
+
+			if ($evt = $this-&gt;_eventDispatcher-&gt;createSendEvent($this, $message))
+			{
+				$this-&gt;_eventDispatcher-&gt;dispatchEvent($evt, 'beforeSendPerformed');
+				if ($evt-&gt;bubbleCancelled())
+				{
+					return 0;
+				}
+			}
+
+			$this-&gt;response = $this-&gt;_doSend($message, $failedRecipients);
+
+			$this-&gt;_debug(&quot;=== Start AWS Response ===&quot;);
+			$this-&gt;_debug($this-&gt;response-&gt;body);
+			$this-&gt;_debug(&quot;=== End AWS Response ===&quot;);
+
+			/** @var bool $success */
+			$success = (200 == $this-&gt;response-&gt;code);
+			
+			if ($respEvent = $this-&gt;_eventDispatcher-&gt;createResponseEvent($this, new Swift_Response_AWSResponse( $message, $this-&gt;response-&gt;xml, $success ), $success))
+				$this-&gt;_eventDispatcher-&gt;dispatchEvent($respEvent, 'responseReceived');
+
+			if ($evt)
+			{
+				$evt-&gt;setResult($success ? Swift_Events_SendEvent::RESULT_SUCCESS : Swift_Events_SendEvent::RESULT_FAILED);
+				$this-&gt;_eventDispatcher-&gt;dispatchEvent($evt, 'sendPerformed');
+			}
+
+			if( $success ) {
+				return count((array) $message-&gt;getTo());
+			}
+			else {
+				return 0;
+			}
+		}
+
+		/**
+		 * do send through the API
+		 *
+		 * @param Swift_Mime_Message $message
+		 * @param string[] &amp;$failedRecipients to collect failures by-reference
+		 * @return AWSResponse
+		 */
+		protected function _doSend( Swift_Mime_Message $message, &amp;$failedRecipients = null )
+		{
+			$date = date( 'D, j F Y H:i:s O' );
+			if( function_exists( 'hash_hmac' ) and in_array( 'sha1', hash_algos() ) ) {
+				$hmac = base64_encode( hash_hmac( 'sha1', $date, $this-&gt;AWSSecretKey, true ) );
+			}
+			else {
+				$hmac = $this-&gt;calculate_RFC2104HMAC( $date, $this-&gt;AWSSecretKey );
+			}
+			$auth = &quot;AWS3-HTTPS AWSAccessKeyId=&quot; . $this-&gt;AWSAccessKeyId . &quot;, Algorithm=HmacSHA1, Signature=&quot; . $hmac;
+
+			$host = parse_url( $this-&gt;endpoint, PHP_URL_HOST );
+			$path = parse_url( $this-&gt;endpoint, PHP_URL_PATH );
+
+			$fp = fsockopen( 'ssl://' . $host , 443, $errno, $errstr, 30 );
+
+			if( ! $fp ) {
+				throw new AWSConnectionError( &quot;$errstr ($errno)&quot; );
+			}
+
+			$socket = new ChunkedTransferSocket( $fp, $host, $path );
+
+			$socket-&gt;header(&quot;Date&quot;, $date);
+			$socket-&gt;header(&quot;X-Amzn-Authorization&quot;, $auth);
+
+			$socket-&gt;write(&quot;Action=SendRawEmail&amp;RawMessage.Data=&quot;);
+
+			$ais = new Swift_AWSInputByteStream($socket);
+			$message-&gt;toByteStream($ais);
+			$ais-&gt;flushBuffers();
+
+			$result = $socket-&gt;read();
+
+			return $result;
+		}
+
+		/**
+		* Cribbed from php-aws - Thanks!
+		* https://github.com/tylerhall/php-aws/blob/master/class.awis.php
+		* (c) Tyler Hall
+		* MIT License
+		*/
+		protected function calculate_RFC2104HMAC($data, $key) {
+			return base64_encode (
+				pack(&quot;H*&quot;, sha1((str_pad($key, 64, chr(0x00))
+				^(str_repeat(chr(0x5c), 64))) .
+				pack(&quot;H*&quot;, sha1((str_pad($key, 64, chr(0x00))
+				^(str_repeat(chr(0x36), 64))) . $data))))
+			);
+		}
+
+		public function isStarted() {}
+		public function start() {}
+		public function stop() {}
+
+		/**
+		 * Register a plugin.
+		 *
+		 * @param Swift_Events_EventListener $plugin
+		 */
+		public function registerPlugin(Swift_Events_EventListener $plugin)
+		{
+			$this-&gt;_eventDispatcher-&gt;bindEventListener($plugin);
+		}
+
+	} // AWSTransport
+
+
+	/**
+	 * Convenience methods to use a socket for chunked transfer in HTTP
+	 */
+	class ChunkedTransferSocket {
+
+		/**
+		 * @param $socket
+		 * @param $host
+		 * @param $path
+		 * @param $method
+		 */
+		public function __construct( $socket, $host, $path, $method=&quot;POST&quot; ) {
+
+			$this-&gt;socket = $socket;
+			$this-&gt;write_started = false;
+			$this-&gt;write_finished = false;
+			$this-&gt;read_started = false;
+
+			fwrite( $this-&gt;socket, &quot;$method $path HTTP/1.1\r\n&quot; );
+
+			$this-&gt;header( &quot;Host&quot;, $host );
+			if( &quot;POST&quot; == $method ) {
+				$this-&gt;header( &quot;Content-Type&quot;, &quot;application/x-www-form-urlencoded&quot; );
+			}
+			$this-&gt;header( &quot;Connection&quot;, &quot;close&quot; );
+			$this-&gt;header( &quot;Transfer-Encoding&quot;, &quot;chunked&quot; );
+		}
+
+		/**
+		 * Add an HTTP header
+		 *
+		 * @param $header
+		 * @param $value
+		 */
+		public function header ( $header, $value ) {
+			if( $this-&gt;write_started ) { throw new InvalidOperationException( &quot;Can not write header, body writing has started.&quot; ); }
+			fwrite( $this-&gt;socket, &quot;$header: $value\r\n&quot; );
+			fflush( $this-&gt;socket );
+		}
+
+		/**
+		 * Write a chunk of data
+		 * @param $chunk
+		 */
+		public function write ( $chunk ) {
+			if( $this-&gt;write_finished ) { throw new InvalidOperationException( &quot;Can not write, reading has started.&quot; ); }
+
+			if( ! $this-&gt;write_started ) {
+				fwrite( $this-&gt;socket, &quot;\r\n&quot; ); // Start message body
+				$this-&gt;write_started = true;
+			}
+
+			fwrite( $this-&gt;socket, sprintf( &quot;%x\r\n&quot;, strlen( $chunk ) ) );
+			fwrite( $this-&gt;socket, $chunk . &quot;\r\n&quot; );
+			fflush( $this-&gt;socket );
+		}
+
+		/**
+		 * Finish writing chunks and get ready to read.
+		 */
+		public function finishWrite () {
+			$this-&gt;write(&quot;&quot;);
+			$this-&gt;write_finished = true;
+		}
+
+		/**
+		 * Read the socket for a response
+		 */
+		public function read () {
+			if( ! $this-&gt;write_finished ) { $this-&gt;finishWrite(); }
+			$this-&gt;read_started = true;
+
+			$response = new AWSResponse();
+			while( ! feof( $this-&gt;socket ) ) {
+				$response-&gt;line( fgets( $this-&gt;socket ) );
+			}
+			$response-&gt;complete();
+			fclose( $this-&gt;socket );
+
+			return $response;
+		}
+
+	}
+
+	/**
+	 * A wrapper to parse an AWS HTTP response
+	 */
+	class AWSResponse {
+
+		/**
+		 * @var array
+		 */
+		public $headers = array();
+
+		/**
+		 * @var int
+		 */
+		public $code = 0;
+
+		/**
+		 * @var string
+		 */
+		public $message = '';
+
+		/**
+		 * @var string
+		 */
+		public $body = '';
+
+		/**
+		 * @var null|SimpleXMLElement
+		 */
+		public $xml = null;
+
+		const STATE_EMPTY = 0;
+		const STATE_HEADERS = 1;
+		const STATE_BODY = 2;
+
+		protected $state = self::STATE_EMPTY;
+
+		public function line ( $line ) {
+
+			switch( $this-&gt;state ) {
+				case self::STATE_EMPTY:
+					if( ! $line ) {
+						throw new AWSEmptyResponseException();
+					}
+					$split = explode( ' ', $line );
+					$this-&gt;code = $split[1];
+					$this-&gt;message = implode( array_slice( $split, 2 ), ' ' );
+					$this-&gt;state = self::STATE_HEADERS;
+					break;
+				case self::STATE_HEADERS:
+					if( &quot;\r\n&quot; == $line ) {
+						$this-&gt;state = self::STATE_BODY;
+						break;
+					}
+
+					$pos = strpos( $line, ':' );
+					if( false === $pos ) { throw new InvalidHeaderException( $line ); }
+					$key = substr( $line, 0, $pos );
+					$this-&gt;headers[$key] = substr( $line, $pos );
+					break;
+				case self::STATE_BODY:
+					$this-&gt;body .= $line;
+					break;
+			}
+
+		}
+
+		public function complete () {
+			$this-&gt;xml = simplexml_load_string( $this-&gt;body );
+		}
+
+	}
+
+	class AWSConnectionError extends Exception {}
+	class InvalidOperationException extends Exception {}
+	class InvalidHeaderException extends Exception {}
+	class AWSEmptyResponseException extends Exception {}
+</pre>
+        <script type="text/javascript">
+             SyntaxHighlighter.all();
+             jQuery('.gutter div').each(function(key, data){
+                jQuery(data).prepend('<a name="L'+jQuery(data).text()+'"/>');
+             });
+        </script>
+    </body>
+</html>

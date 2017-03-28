@@ -1,0 +1,136 @@
+<html>
+    <head>
+        <script
+            type="text/javascript"
+            src="../../js/jquery-1.4.2.min.js">
+        </script>
+        <script
+            type="text/javascript"
+            src="../../syntax_highlighter/scripts/shCore.js">
+        </script>
+        <script
+            type="text/javascript"
+            src="../../syntax_highlighter/scripts/shBrushJScript.js">
+        </script>
+        <script
+            type="text/javascript"
+            src="../../syntax_highlighter/scripts/shBrushPhp.js">
+        </script>
+        <script
+            type="text/javascript"
+            src="../../syntax_highlighter/scripts/shBrushXml.js">
+        </script>
+        <link
+            href="../../syntax_highlighter/styles/shCore.css" rel="stylesheet"
+            type="text/css"
+        />
+        <link
+            href="../../syntax_highlighter/styles/shCoreEclipse.css"
+            rel="stylesheet" type="text/css"
+        />
+        <link
+            href="../../syntax_highlighter/styles/shThemeWordpress.css"
+            rel="stylesheet" type="text/css"
+        />
+    </head>
+    <body>
+        <pre class="brush: php">&lt;?php
+
+class Swift_Response_AWSResponse {
+	/**
+	 * @var Swift_Mime_Message
+	 */
+	protected $message;
+
+	/**
+	 * @var null|SimpleXMLElement
+	 */
+	protected $body;
+
+	/**
+	 * @var bool
+	 */
+	protected $success;
+
+	/**
+	 * Swift_Response_AWSResponse constructor.
+	 *
+	 * @param Swift_Mime_Message $message
+	 * @param null $body
+	 * @param bool $success
+	 */
+	public function __construct( Swift_Mime_Message $message, $body = null, $success = false )
+	{
+		$this-&gt;message = $message;
+		$this-&gt;body = $body;
+		$this-&gt;success = $success;
+	}
+
+	/**
+	 * @return Swift_Mime_Message
+	 */
+	function getMessage()
+	{
+		return $this-&gt;message;
+	}
+
+	/**
+	 * @return null|SimpleXMLElement
+	 */
+	function getBody()
+	{
+		return $this-&gt;body;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isSuccess()
+	{
+		return $this-&gt;success;
+	}
+
+	/**
+	 * @param $message
+	 *
+	 * @return $this
+	 */
+	function setMessage( $message )
+	{
+		$this-&gt;message = $message;
+		return $this;
+	}
+
+	/**
+	 * @param $body
+	 *
+	 * @return $this
+	 */
+	function setBody( $body )
+	{
+		$this-&gt;body = $body;
+		return $this;
+	}
+
+	/**
+	 * @param bool $success
+	 *
+	 * @return Swift_Response_AWSResponse
+	 */
+	public function setSuccess( $success )
+	{
+		$this-&gt;success = $success;
+		return $this;
+	}
+
+
+}
+</pre>
+        <script type="text/javascript">
+             SyntaxHighlighter.all();
+             jQuery('.gutter div').each(function(key, data){
+                jQuery(data).prepend('<a name="L'+jQuery(data).text()+'"/>');
+             });
+        </script>
+    </body>
+</html>
