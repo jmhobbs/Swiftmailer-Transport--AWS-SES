@@ -31,6 +31,25 @@ class Swift_Response_AWSResponse {
 	}
 
 	/**
+	 * @return string
+	 */
+	function __toString()
+    	{
+		if(!$this->getBody())
+			return "No response body available.";
+
+		//success
+		if($this->getBody()->ResponseMetadata)
+			return "Success! RequestId: " . $this->getBody()->ResponseMetadata->RequestId;
+
+		//failure
+		if($this->getBody()->Error && $this->getBody()->Error->Message)
+			return (string) $this->getBody()->Error->Message;
+
+		return "Unknown Response";
+    	}
+	
+	/**
 	 * @return Swift_Mime_Message
 	 */
 	function getMessage()
