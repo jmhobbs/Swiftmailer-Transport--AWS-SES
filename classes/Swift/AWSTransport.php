@@ -139,6 +139,10 @@
 			}
 		}
 
+        public function ping() {
+            return true;
+        }
+
 		/**
 		 * do send through the API
 		 *
