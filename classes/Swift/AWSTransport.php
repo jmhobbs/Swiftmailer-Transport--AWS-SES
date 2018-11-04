@@ -97,12 +97,12 @@
 		* Recipient/sender data will be retreived from the Message API.
 		* The return value is the number of recipients who were accepted for delivery.
 		*
-		* @param Swift_Mime_Message $message
+		* @param Swift_Mime_SimpleMessage $message
 		* @param string[] &$failedRecipients to collect failures by-reference
 		* @return int
 		* @throws AWSConnectionError
 		*/
-		public function send( Swift_Mime_Message $message, &$failedRecipients = null ) {
+		public function send( Swift_Mime_SimpleMessage $message, &$failedRecipients = null ) {
 
 			if ($evt = $this->_eventDispatcher->createSendEvent($this, $message))
 			{
@@ -142,11 +142,11 @@
 		/**
 		 * do send through the API
 		 *
-		 * @param Swift_Mime_Message $message
+		 * @param Swift_Mime_SimpleMessage $message
 		 * @param string[] &$failedRecipients to collect failures by-reference
 		 * @return AWSResponse
 		 */
-		protected function _doSend( Swift_Mime_Message $message, &$failedRecipients = null )
+		protected function _doSend( Swift_Mime_SimpleMessage $message, &$failedRecipients = null )
 		{
 			$date = date( 'D, j F Y H:i:s O' );
 			if( function_exists( 'hash_hmac' ) and in_array( 'sha1', hash_algos() ) ) {
