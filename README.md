@@ -73,3 +73,4 @@ Versions 4.1.3 and up should work fine.
 * @jonatrey & @faz - Debugging and Testing issue #13
 * @casconed - Made debug function more robust, issue #21
 * @martijngastkemper - Added responseReceived event to get message id from AWS
+* @weierophinney - Swiftmailer 6 support
