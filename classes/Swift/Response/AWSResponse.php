@@ -2,7 +2,7 @@
 
 class Swift_Response_AWSResponse {
 	/**
-	 * @var Swift_Mime_Message
+	 * @var Swift_Mime_SimpleMessage
 	 */
 	protected $message;
 
@@ -19,11 +19,11 @@ class Swift_Response_AWSResponse {
 	/**
 	 * Swift_Response_AWSResponse constructor.
 	 *
-	 * @param Swift_Mime_Message $message
+	 * @param Swift_Mime_SimpleMessage $message
 	 * @param null $body
 	 * @param bool $success
 	 */
-	public function __construct( Swift_Mime_Message $message, $body = null, $success = false )
+	public function __construct( Swift_Mime_SimpleMessage $message, $body = null, $success = false )
 	{
 		$this->message = $message;
 		$this->body = $body;
@@ -50,7 +50,7 @@ class Swift_Response_AWSResponse {
     	}
 	
 	/**
-	 * @return Swift_Mime_Message
+	 * @return Swift_Mime_SimpleMessage
 	 */
 	function getMessage()
 	{
