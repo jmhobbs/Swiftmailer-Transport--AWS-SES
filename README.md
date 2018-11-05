@@ -1,3 +1,7 @@
+# This branch is for legacy Swiftmailer 5 support.
+
+It will receive bug fixes only.
+
 # What is it?
 
 It's a simple transport for use with Swiftmailer to send mail over AWS SES.
