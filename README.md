@@ -2,9 +2,7 @@
 
 It's a simple transport for use with Swiftmailer to send mail over AWS SES.
 
-As on December 2011, Amazon [provides an SMTP interface to SES](http://aws.amazon.com/ses/faqs/#21), so you may prefer to use Swiftmailer's built in SMTP transport.
-
-There is, however, a [persistent-connections](https://github.com/jmhobbs/Swiftmailer-Transport--AWS-SES/tree/feature/persistent-connections) branch which might get you faster overall throughput than SMTP.  This isn't merged into master yet, so you'll need to tweak your composer.json to install it.  You can find that change, and keep track of progress on [PR #26](https://github.com/jmhobbs/Swiftmailer-Transport--AWS-SES/pull/26).
+As of December 2011, Amazon [provides an SMTP interface to SES](http://aws.amazon.com/ses/faqs/#21), so you may prefer to use Swiftmailer's built in SMTP transport.
 
 # Where do I put it?
 
@@ -29,6 +27,10 @@ Like any other Swiftmailer transport:
     $mailer = Swift_Mailer::newInstance($transport);
     
     $mailer->send($message);
+
+# Swiftmailer <= 5.x
+
+The current branch has been update to be compatible with Swiftmailer 6.  If you need the old branch, it is availble under the 0.9.x tags, or the swiftmailer-5.x branch.
 
 # Symfony1.X configuration
 
