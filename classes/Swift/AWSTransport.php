@@ -165,6 +165,9 @@
 			if( ! $this->persistent || ! $this->fp ) {
 				$host = parse_url( $this->endpoint, PHP_URL_HOST );
 				$path = parse_url( $this->endpoint, PHP_URL_PATH );
+				if (is_null($path)) {
+					$path = '/';
+				}
 
 				$fp = fsockopen( 'ssl://' . $host, 443, $errno, $errstr, 30 );
 
@@ -205,6 +208,9 @@
 			$fp = $this->getRawSocket();
 			$host = parse_url( $this->endpoint, PHP_URL_HOST );
 			$path = parse_url( $this->endpoint, PHP_URL_PATH );
+			if (is_null($path)) {
+				$path = '/';
+			}
 
 			$socket = new ChunkedTransferSocket( $fp, $host, $path, "POST", $this->persistent );
 
