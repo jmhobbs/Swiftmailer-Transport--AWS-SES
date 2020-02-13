@@ -403,7 +403,7 @@
 					}
 					$split = explode( ' ', $line );
 					$this->code = $split[1];
-					$this->message = implode( array_slice( $split, 2 ), ' ' );
+					$this->message = implode( ' ', array_slice( $split, 2 ) );
 					$this->state = self::STATE_HEADERS;
 					break;
 				case self::STATE_HEADERS:
