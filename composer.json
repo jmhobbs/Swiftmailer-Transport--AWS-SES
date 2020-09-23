@@ -12,7 +12,8 @@
 	],
 	"require": {
 		"php": "^7.0",
-		"swiftmailer/swiftmailer": "^6.0"
+		"swiftmailer/swiftmailer": "^6.0",
+		"aws/aws-sdk-php": "^3.2.1"
 	},
 	"autoload": {
 		"psr-0": { "": "classes/" }

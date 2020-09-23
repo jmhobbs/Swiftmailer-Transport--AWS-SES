@@ -17,17 +17,30 @@ class Swift_Response_AWSResponse {
 	protected $success;
 
 	/**
+	 * @var null|Aws\SesV2\Exception\SesV2Exception
+	 */
+	protected $exception;
+
+	/**
+	 * @var null|string
+	 */
+	protected $message_id;
+
+	/**
 	 * Swift_Response_AWSResponse constructor.
 	 *
 	 * @param Swift_Mime_SimpleMessage $message
-	 * @param null $body
+	 * @param null $body DEPRECATED
 	 * @param bool $success
+	 * @param null $exception Exception returned from SES
 	 */
-	public function __construct( Swift_Mime_SimpleMessage $message, $body = null, $success = false )
+	public function __construct( Swift_Mime_SimpleMessage $message, $body = null, $success = false, $exception = null, $message_id = null )
 	{
 		$this->message = $message;
-		$this->body = $body;
+		$this->body = null;
 		$this->success = $success;
+		$this->exception = $exception;
+		$this->message_id = $message_id;
 	}
 
 	/**
@@ -48,7 +61,7 @@ class Swift_Response_AWSResponse {
 
 		return "Unknown Response";
     	}
-	
+
 	/**
 	 * @return Swift_Mime_SimpleMessage
 	 */
@@ -63,6 +76,20 @@ class Swift_Response_AWSResponse {
 	function getBody()
 	{
 		return $this->body;
+	}
+
+	/**
+	 * @return null|Aws\SesV2\Exception\SesV2Exception
+	 */
+	public function getException() {
+		return $this->exception;
+	}
+
+	/**
+	 * @return null|string
+	 */
+	public function getMessageID() {
+		return $this->message_id;
 	}
 
 	/**
@@ -105,6 +132,5 @@ class Swift_Response_AWSResponse {
 		$this->success = $success;
 		return $this;
 	}
-
 
 }
