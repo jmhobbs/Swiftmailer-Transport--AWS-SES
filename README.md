@@ -1,3 +1,9 @@
+# THIS PACKAGE IS DEPRECATED
+
+This package is deprecated, you should move to the SMTP interface.  Read more in [SMTP.md](https://github.com/jmhobbs/Swiftmailer-Transport--AWS-SES/blob/master/SMTP.md)
+
+There will be no more feature development for this package, and only critical bug fixes will be applied.
+
 # What is it?
 
 It's a simple transport for use with Swiftmailer to send mail over AWS SES.
@@ -22,10 +28,10 @@ Like any other Swiftmailer transport:
 
     //Create the Transport
     $transport = Swift_AWSTransport::newInstance( 'AWS_ACCESS_KEY', 'AWS_SECRET_KEY' );
-    
+
     //Create the Mailer using your created Transport
     $mailer = Swift_Mailer::newInstance($transport);
-    
+
     $mailer->send($message);
 
 # Swiftmailer <= 5.x
