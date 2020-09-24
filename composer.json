@@ -4,6 +4,7 @@
 	"description": "Add AWS SES support to Swiftmailer",
 	"keywords": [ "email", "swiftmailer", "SES", "AWS" ],
 	"license": "MIT",
+	"abandoned": "https://github.com/jmhobbs/Swiftmailer-Transport--AWS-SES/blob/master/SMTP.md",
 	"authors": [
 		{
 			"name": "John Hobbs",
